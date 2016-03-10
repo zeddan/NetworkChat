@@ -53,6 +53,18 @@ public class ClientGUI extends JPanel {
         pnlLeft.add(pnlLeftGroups);
         pnlLeft.add(pnlLeftPrivate);
 
+        // panel bg colors
+        pnlLeft.setBackground(new Color(56, 56, 56));
+        pnlRight.setBackground(new Color(56, 56, 56));
+        pnlLeftGroups.setOpaque(false);
+        pnlLeftPrivate.setOpaque(false);
+
+        // text colors
+        lblGroupList.setForeground(Color.WHITE);
+        lblGroupCreate.setForeground(new Color(145,145,145));
+        lblPrivateList.setForeground(Color.WHITE);
+        lblPrivateCreate.setForeground(new Color(145,145,145));
+
         pnlMain.add(tfChatWindow, BorderLayout.CENTER);
         pnlMain.add(tfChatWrite, BorderLayout.SOUTH);
         this.add(pnlLeft, BorderLayout.WEST);
@@ -67,7 +79,12 @@ public class ClientGUI extends JPanel {
         lblGroupCreate.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                JOptionPane.showMessageDialog(null, "hey");
+                String bigList[] = new String[30];
+                for (int i = 0; i < bigList.length; i++) {
+                    bigList[i] = Integer.toString(i);
+                }
+                JOptionPane.showInputDialog(null, "Select users", "Create group", JOptionPane.QUESTION_MESSAGE,
+                        null, bigList, "Titan");
             }
 
             @Override
@@ -82,12 +99,12 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-
+                lblGroupCreate.setForeground(new Color(250,250,250));
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-
+                lblGroupCreate.setForeground(new Color(145,145,145));
             }
         });
 
@@ -112,13 +129,14 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-
+                lblGroupCreate.setForeground(new Color(250,250,250));
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-
+                lblGroupCreate.setForeground(new Color(145,145,145));
             }
+
         });
     }
 
