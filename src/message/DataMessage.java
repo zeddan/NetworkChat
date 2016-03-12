@@ -12,4 +12,8 @@ public class DataMessage extends Message{
 		super(sender, recipients);
 		this.data = data;
 	}
+	
+	public String[] getData(){
+		return data;
+	}
 }
