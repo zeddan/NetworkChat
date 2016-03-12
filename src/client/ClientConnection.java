@@ -7,19 +7,27 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ * 
+ * @author Christoffer Strandberg
+ *
+ */
 public class ClientConnection {
 	
 	private Socket socket;
 	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	private MessageListener messageListener;
+	private String[] clients;
 	
 	public ClientConnection(String address, int port,
 		MessageCallback messageCallback){
 		connect(address,port);		
 		try {
 			oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-			messageListener = new MessageListener(new ObjectInputStream
-					(new BufferedInputStream(socket.getInputStream())),messageCallback);
+			ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+			
+			messageListener = new MessageListener(ois, messageCallback);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -55,6 +63,20 @@ public class ClientConnection {
 	}
 	
 	public void updateClients(){
+		DataMessage tempMes;
+		try {
+			oos.writeObject(new CommandMessage("Client",new String[] {"server"},"Update Clients"));
+			oos.flush();
+			
+			tempMes = (DataMessage) ois.readObject();
+			
+			clients = tempMes.getData();
+		} catch (IOException e) {
+			System.out.println("Message not sent to server");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Could not typecast");
+		}
+		
 		
 	}
 	
