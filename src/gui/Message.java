@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Message implements Serializable {
 	private String sender;
 	private String[] recipients;
-	private String message;
 	private String deliveredToServerTime;
 	private String deliveredFromServerTime;
 	
