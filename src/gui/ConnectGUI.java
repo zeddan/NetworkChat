@@ -2,9 +2,15 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import client.ClientController;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ConnectGUI extends JPanel {
+	private ClientController clientController;
 
     private static final Integer WIN_WIDTH = 600;
     private static final Integer WIN_HEIGHT = 150;
@@ -19,7 +25,8 @@ public class ConnectGUI extends JPanel {
     private JButton btnConnect = new JButton("Connect");
     private Dimension componentSize = new Dimension(200, 25);
 
-    public ConnectGUI() {
+    public ConnectGUI(ClientController clientController) {
+    	this.clientController = clientController;
         setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
         lblUsername.setPreferredSize(componentSize);
         lblAddress.setPreferredSize(componentSize);
@@ -36,14 +43,25 @@ public class ConnectGUI extends JPanel {
         pnlOptions.add(tfPort);
         add(pnlOptions);
         add(btnConnect);
+        btnConnect.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				if(btnConnect==e.getSource()) {
+					clientController.connect(tfAddress.getText(), Integer.parseInt(tfPort.getText()), tfUsername.getText());
+				}
+			}
+		});
     }
+    
+    
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 JFrame frame = new JFrame("NetworkChat");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new ConnectGUI());
+                frame.add(new ConnectGUI(new ClientController()));
                 frame.pack();
                 frame.setLocation(400, 300);
                 frame.setVisible(true);
