@@ -35,11 +35,7 @@ public class ChatMessage extends Message {
 	}
 	
 	public boolean hasPicture(){
-		boolean has = false;
-		if(picture != null){
-			has = true;
-		}
-		return has;
+		return picture != null;
 	}
 	
 }
