@@ -8,6 +8,7 @@ public class ServerGUI extends JPanel {
 
     private static final Integer WIN_WIDTH = 1024;
     private static final Integer WIN_HEIGHT = 600;
+
     private JPanel pnlLeft = new JPanel();
     private JPanel pnlMain = new JPanel();
     private JLabel lblPort = new JLabel("Port");
