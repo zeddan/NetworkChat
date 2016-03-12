@@ -1,16 +1,20 @@
 package gui;
 
+import gui.interfaces.UserSelectionListener;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 public class ClientGUI extends JPanel {
 
     private JPanel pnlLeft = new JPanel(new FlowLayout());
-    private JPanel pnlRight = new JPanel(new FlowLayout());
-    private JPanel pnlLeftGroups = new JPanel(new FlowLayout());
-    private JPanel pnlLeftPrivate = new JPanel(new FlowLayout());
+    private JPanel pnlRight = new JPanel();
+    private JPanel pnlLeftGroups = new JPanel();
+    private JPanel pnlLeftPrivate = new JPanel();
     private JPanel pnlMain = new JPanel(new BorderLayout());
     private JTextField tfChatWrite = new JTextField();
     private JTextField tfChatWindow = new JTextField();
@@ -18,6 +22,7 @@ public class ClientGUI extends JPanel {
     private JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
     private JLabel lblPrivateList = new JLabel("Private messages", SwingConstants.CENTER);
     private JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
+    private JLabel lblChatUsers = new JLabel("Users", SwingConstants.CENTER);
 
     private static final Integer WIN_WIDTH = 1024;
     private static final Integer WIN_HEIGHT = 600;
@@ -32,8 +37,8 @@ public class ClientGUI extends JPanel {
     private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
     public ClientGUI() {
-        this.setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
-        this.setLayout(new BorderLayout());
+        setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
+        setLayout(new BorderLayout());
         setupListeners();
 
         // set sizes
@@ -45,6 +50,13 @@ public class ClientGUI extends JPanel {
         pnlLeftPrivate.setPreferredSize(pnlLeftPrivateSize);
         pnlRight.setPreferredSize(pnlRightSize);
 
+        // styling and behavior
+        pnlLeft.setBorder(new EmptyBorder(10,30,10,0));
+        pnlRight.setBorder(new EmptyBorder(15,15,10,0));
+        pnlLeftGroups.setLayout(new BoxLayout(pnlLeftGroups, BoxLayout.Y_AXIS));
+        pnlLeftPrivate.setLayout(new BoxLayout(pnlLeftPrivate, BoxLayout.Y_AXIS));
+        pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
+
         // add components to left panel
         pnlLeftGroups.add(lblGroupList);
         pnlLeftGroups.add(lblGroupCreate);
@@ -52,6 +64,9 @@ public class ClientGUI extends JPanel {
         pnlLeftPrivate.add(lblPrivateCreate);
         pnlLeft.add(pnlLeftGroups);
         pnlLeft.add(pnlLeftPrivate);
+
+        // add components to right panel
+        pnlRight.add(lblChatUsers);
 
         // panel bg colors
         pnlLeft.setBackground(new Color(56, 56, 56));
@@ -64,6 +79,9 @@ public class ClientGUI extends JPanel {
         lblGroupCreate.setForeground(new Color(145,145,145));
         lblPrivateList.setForeground(Color.WHITE);
         lblPrivateCreate.setForeground(new Color(145,145,145));
+        lblChatUsers.setForeground(Color.WHITE);
+
+        tfChatWindow.setEditable(false);
 
         pnlMain.add(tfChatWindow, BorderLayout.CENTER);
         pnlMain.add(tfChatWrite, BorderLayout.SOUTH);
@@ -73,6 +91,7 @@ public class ClientGUI extends JPanel {
     }
 
     public void setupListeners() {
+
         /* * * * * * * * * * *
             CREATE NEW GROUP
         * * * * * * * * * * */
@@ -114,7 +133,12 @@ public class ClientGUI extends JPanel {
         lblPrivateCreate.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                JOptionPane.showMessageDialog(null, "hey");
+                JOptionPane.showMessageDialog(null, new NewMessageDialog(new UserSelectionListener() {
+                    @Override
+                    public void onUsers(ArrayList<String> users) {
+
+                    }
+                }), "Select users", JOptionPane.PLAIN_MESSAGE);
             }
 
             @Override
@@ -129,12 +153,12 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent mouseEvent) {
-                lblGroupCreate.setForeground(new Color(250,250,250));
+                lblPrivateCreate.setForeground(new Color(250,250,250));
             }
 
             @Override
             public void mouseExited(MouseEvent mouseEvent) {
-                lblGroupCreate.setForeground(new Color(145,145,145));
+                lblPrivateCreate.setForeground(new Color(145,145,145));
             }
 
         });
