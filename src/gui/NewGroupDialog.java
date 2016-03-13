@@ -115,13 +115,5 @@ public class NewGroupDialog extends JPanel {
                 }
             });
         }
-
-        public int getHeight() {
-            return HEIGHT;
-        }
-
-        public int getWidth() {
-            return WIDTH;
-        }
     }
 }
