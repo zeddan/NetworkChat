@@ -8,9 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * 
  * @author Christoffer Strandberg
- *
  */
 public class ClientConnection {
 	
@@ -26,11 +24,11 @@ public class ClientConnection {
 		try {
 			oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			
 			messageListener = new MessageListener(ois, messageCallback);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		updateClients();
 	}
 	
 	public void connect(String address, int port){
@@ -44,9 +42,15 @@ public class ClientConnection {
 	public void close(){
 		try {
 			socket.close();
+			ois.close();
+			oos.close();
 		} catch (IOException e) {
 			System.err.println("Socket not closed!");
 		}
+	}
+	
+	public String[] getClients(){
+		return clients;
 	}
 	
 	public void startListener(){
@@ -67,21 +71,16 @@ public class ClientConnection {
 		try {
 			oos.writeObject(new CommandMessage("Client",new String[] {"server"},"Update Clients"));
 			oos.flush();
-			
 			tempMes = (DataMessage) ois.readObject();
-			
 			clients = tempMes.getData();
 		} catch (IOException e) {
 			System.out.println("Message not sent to server");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Could not typecast");
 		}
-		
-		
 	}
 	
 	private class MessageListener extends Thread{
-		
 		private ObjectInputStream ois;
 		private MessageCallback mc;
 		
@@ -102,5 +101,4 @@ public class ClientConnection {
 			}
 		}
 	}
-
 }
