@@ -61,7 +61,7 @@ public class NewGroupDialog extends JPanel {
         public UsersPanel() {
             cols = 5;
             rows = users.size() % cols == 0 ?
-                   users.size()/cols : users.size()/cols + 1;
+                    users.size() / cols : users.size() / cols + 1;
             setLayout(new GridLayout(rows, cols));
             setPreferredSize(getSize());
             for (Object object : users.values()) {
@@ -87,31 +87,49 @@ public class NewGroupDialog extends JPanel {
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
             setOpaque(true);
             addMouseListener(new MouseListener() {
+                private boolean pressed = false;
+                private final Color grey = new Color(145, 145, 145);
+                private final Color black = Color.BLACK;
+
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
                     User user = (User) users.get(name);
-                    selectedUsers.add(user);
-                    // also make some kind of indication visually
+                    if (selectedUsers.contains(user)) {
+                        selectedUsers.remove(user);
+                        pressed = false;
+                        setTextColor(black);
+                    } else {
+                        selectedUsers.add(user);
+                        pressed = true;
+                        setTextColor(grey);
+                    }
                 }
 
                 @Override
                 public void mousePressed(MouseEvent mouseEvent) {
-
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent mouseEvent) {
-
+                    if (pressed)
+                        setTextColor(grey);
+                    else
+                        setTextColor(black);
                 }
 
                 @Override
                 public void mouseEntered(MouseEvent mouseEvent) {
-                    // change text color
+                    setTextColor(grey);
                 }
 
                 @Override
                 public void mouseExited(MouseEvent mouseEvent) {
-                    // change text color
+                    if (!pressed)
+                        setTextColor(black);
+                }
+
+                private void setTextColor(Color color) {
+                    UserLabel.this.setForeground(color);
                 }
             });
         }
