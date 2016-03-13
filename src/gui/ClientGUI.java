@@ -1,11 +1,11 @@
 package gui;
 
 import client.ClientController;
-import gui.interfaces.UserSelectionListener;
 import server.User;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -64,6 +64,11 @@ public class ClientGUI extends JPanel {
         pnlLeftGroups.setLayout(new BoxLayout(pnlLeftGroups, BoxLayout.Y_AXIS));
         pnlLeftPrivate.setLayout(new BoxLayout(pnlLeftPrivate, BoxLayout.Y_AXIS));
         pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
+        tfChatWindow.setBorder(null);
+        tfChatWrite.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(new Color(145, 145, 145), 3),
+                new EmptyBorder(5, 5, 5, 5)));
+        pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // add components to left panel
         pnlLeftGroups.add(lblGroupList);
@@ -81,6 +86,8 @@ public class ClientGUI extends JPanel {
         pnlRight.setBackground(new Color(56, 56, 56));
         pnlLeftGroups.setOpaque(false);
         pnlLeftPrivate.setOpaque(false);
+        pnlMain.setBackground(Color.WHITE);
+        setBackground(Color.WHITE);
 
         // text colors
         lblGroupList.setForeground(Color.WHITE);
