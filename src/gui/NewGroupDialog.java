@@ -17,6 +17,8 @@ public class NewGroupDialog extends JPanel {
     private static ArrayList<User> selectedUsers;
 
     public static ArrayList<User> display(Map<String, User> users) {
+        UIManager.put("OptionPane.background", Color.white);
+        UIManager.put("Panel.background", Color.white);
         selectedUsers = new ArrayList<>();
         String title = "Select users";
         int optionType = JOptionPane.YES_NO_OPTION;
