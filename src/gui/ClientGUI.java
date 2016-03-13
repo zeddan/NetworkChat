@@ -1,6 +1,8 @@
 package gui;
 
+import client.ClientController;
 import gui.interfaces.UserSelectionListener;
+import server.User;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,6 +10,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class ClientGUI extends JPanel {
 
@@ -36,7 +40,11 @@ public class ClientGUI extends JPanel {
     private Dimension pnlLeftPrivateSize = new Dimension(PNL_LEFT_WIDTH, PNL_LEFT_HEIGHT/2);
     private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
-    public ClientGUI() {
+    private ClientController clientController;
+
+    public ClientGUI(ClientController clientController) {
+        this.clientController = clientController;
+
         setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
         setLayout(new BorderLayout());
         setupListeners();
@@ -90,6 +98,10 @@ public class ClientGUI extends JPanel {
         this.add(pnlRight, BorderLayout.EAST);
     }
 
+    public void textToChatWindow(String str) {
+
+    }
+
     public void setupListeners() {
 
         /* * * * * * * * * * *
@@ -98,12 +110,17 @@ public class ClientGUI extends JPanel {
         lblGroupCreate.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                String bigList[] = new String[30];
-                for (int i = 0; i < bigList.length; i++) {
-                    bigList[i] = Integer.toString(i);
-                }
-                JOptionPane.showInputDialog(null, "Select users", "Create group", JOptionPane.QUESTION_MESSAGE,
-                        null, bigList, "Titan");
+                //  mock start
+                Map<String, User> users = new Hashtable<>();
+                for (int i=0; i < 22; i++) {
+                    users.put("user"+i, new UserMock("user"+i));
+                } // mock end
+                ArrayList<User> selectedUsers = NewGroupDialog.display(users);
+                String s = "";
+                if (selectedUsers != null && selectedUsers.size() > 0)
+                    for (User u : selectedUsers)
+                        s += u.getUserName() + " ";
+                JOptionPane.showMessageDialog(null, s);
             }
 
             @Override
@@ -133,12 +150,7 @@ public class ClientGUI extends JPanel {
         lblPrivateCreate.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                JOptionPane.showMessageDialog(null, new NewMessageDialog(new UserSelectionListener() {
-                    @Override
-                    public void onUsers(ArrayList<String> users) {
-
-                    }
-                }), "Select users", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, "nothing here yet");
             }
 
             @Override
@@ -169,7 +181,7 @@ public class ClientGUI extends JPanel {
             public void run() {
                 JFrame frame = new JFrame("Client");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new ClientGUI());
+                frame.add(new ClientGUI(null));
                 frame.pack();
                 frame.setVisible(true);
             }
