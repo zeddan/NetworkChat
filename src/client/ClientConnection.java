@@ -1,4 +1,8 @@
-package gui;
+package client;
+
+import message.CommandMessage;
+import message.DataMessage;
+import message.Message;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
