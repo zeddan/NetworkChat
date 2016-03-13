@@ -90,11 +90,14 @@ public class ConnectGUI extends JPanel {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                 JFrame frame = new JFrame("NetworkChat");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.add(new ConnectGUI(new ClientController()));
                 frame.pack();
-                frame.setLocation(400, 300);
+                frame.setLocation(
+                        dim.width/2-frame.getSize().width/2,
+                        dim.height/2-frame.getSize().height/2);
                 frame.setVisible(true);
             }
         });

@@ -9,6 +9,8 @@ import javax.swing.SwingUtilities;
 
 import client.MessageCallback;
 
+import java.awt.*;
+
 public class ClientController  {
 	private ClientGUI clientGui;
 	private ConnectGUI connectGui;
@@ -38,10 +40,14 @@ public class ClientController  {
 	public void createClientFrame() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				clientFrame = new JFrame("Client");
 				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				clientFrame.add(clientGui);
 				clientFrame.pack();
+				connectFrame.setLocation(
+						dim.width/2-connectFrame.getSize().width/2,
+						dim.height/2-connectFrame.getSize().height/2);
 				clientFrame.setVisible(true);
 			}
 		});
@@ -50,11 +56,14 @@ public class ClientController  {
 	public void createConnectFrame() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				connectFrame = new JFrame("NetworkChat");
 				connectFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				connectFrame.add(connectGui);
 				connectFrame.pack();
-				connectFrame.setLocation(400, 300);
+				connectFrame.setLocation(
+						dim.width/2-connectFrame.getSize().width/2,
+						dim.height/2-connectFrame.getSize().height/2);
 				connectFrame.setVisible(true);
 			}
 		});

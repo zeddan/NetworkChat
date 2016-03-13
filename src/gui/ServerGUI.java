@@ -36,10 +36,14 @@ public class ServerGUI extends JPanel {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
                 JFrame frame = new JFrame("Server");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.add(new ServerGUI());
                 frame.pack();
+                frame.setLocation(
+                        dim.width/2-frame.getSize().width/2,
+                        dim.height/2-frame.getSize().height/2);
                 frame.setVisible(true);
             }
         });
