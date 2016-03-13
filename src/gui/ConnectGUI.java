@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ConnectGUI extends JPanel {
-	private ClientController clientController;
 
     private static final Integer WIN_WIDTH = 600;
     private static final Integer WIN_HEIGHT = 150;
@@ -26,8 +25,8 @@ public class ConnectGUI extends JPanel {
     private Dimension componentSize = new Dimension(200, 25);
 
     public ConnectGUI(ClientController clientController) {
-    	this.clientController = clientController;
         setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
+        setupConnectButtonListener(clientController);
         lblUsername.setPreferredSize(componentSize);
         lblAddress.setPreferredSize(componentSize);
         lblPort.setPreferredSize(componentSize);
@@ -43,18 +42,50 @@ public class ConnectGUI extends JPanel {
         pnlOptions.add(tfPort);
         add(pnlOptions);
         add(btnConnect);
-        btnConnect.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				if(btnConnect==e.getSource()) {
-					clientController.connect(tfAddress.getText(), Integer.parseInt(tfPort.getText()), tfUsername.getText());
-				}
-			}
-		});
     }
-    
-    
-    
+
+    private void setupConnectButtonListener(final ClientController clientController) {
+        btnConnect.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == btnConnect) {
+                    String address = tfAddress.getText();
+                    String portString = tfPort.getText();
+                    String username = tfUsername.getText();
+                    Integer port = null;
+                    boolean error = false;
+
+                    if (username.isEmpty()) {
+                        showMessage("Enter a username");
+                        error = true;
+                        tfUsername.requestFocus();
+                    } else if (portString.isEmpty()) {
+                        showMessage("Port field must not be empty");
+                        error = true;
+                        tfPort.requestFocus();
+                    } else if (address.isEmpty()) {
+                        showMessage("Address field must not be empty");
+                        error = true;
+                        tfAddress.requestFocus();
+                    } else {
+                        try {
+                            port = Integer.valueOf(portString);
+                        } catch (NumberFormatException exception) {
+                            showMessage("Invalid port number");
+                            error = true;
+                            tfPort.requestFocus();
+                        }
+                    }
+
+                    if (!error)
+                        clientController.connect(address, port, username);
+                }
+            }
+        });
+    }
+
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message);
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
