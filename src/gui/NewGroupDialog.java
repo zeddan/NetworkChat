@@ -43,6 +43,7 @@ public class NewGroupDialog extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setBorder(null);
+        scrollPane.setBackground(Color.WHITE);
         setCustomSize();
         add(scrollPane);
     }
@@ -65,7 +66,6 @@ public class NewGroupDialog extends JPanel {
             rows = users.size() % cols == 0 ?
                     users.size() / cols : users.size() / cols + 1;
             setLayout(new GridLayout(rows, cols));
-            setPreferredSize(getSize());
             for (Object object : users.values()) {
                 User user = (User) object;
                 add(new UserLabel(user.getUserName()));
@@ -87,7 +87,6 @@ public class NewGroupDialog extends JPanel {
         public UserLabel(final String name) {
             super(name);
             setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            setOpaque(true);
             addMouseListener(new MouseListener() {
                 private boolean pressed = false;
                 private final Color grey = new Color(145, 145, 145);
