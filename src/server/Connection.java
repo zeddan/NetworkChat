@@ -1,4 +1,4 @@
-package gui;
+package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;

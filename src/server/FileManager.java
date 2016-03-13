@@ -1,4 +1,4 @@
-package gui;
+package server;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
