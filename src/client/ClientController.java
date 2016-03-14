@@ -2,14 +2,17 @@ package client;
 import gui.ClientGUI;
 import gui.ConnectGUI;
 import message.*;
-
 import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-
 import client.MessageCallback;
-
 import java.awt.*;
+
+/**
+ * 
+ * @author simonmansson
+ *
+ */
 
 public class ClientController  {
 	private ClientGUI clientGui;
@@ -84,15 +87,27 @@ public class ClientController  {
 	}
 
 	private class ConnectionListener implements MessageCallback {
-
+		String theMessage;
 		public void add(Message message) {
-			System.out.println();
+			
+			if(message instanceof ChatMessage) {
+				readChatMessage((ChatMessage)message);
+			}
 		}
 
 		//test
 		public void add(String str) {
 			System.out.println(str);
 			clientGui.textToChatWindow(str);
+		}
+		
+		private void readChatMessage(ChatMessage chatMessage) {
+			theMessage = chatMessage.getDeliveredFromServerTime() + ": from " + chatMessage.getSender() + ": "
+					+ chatMessage.getChatMessage();
+			
+			if(chatMessage.hasPicture()) {
+				clientGui.pictureToChatWindow(chatMessage.getPicture());
+			}
 		}
 	}
 
