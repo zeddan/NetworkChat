@@ -9,6 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author zeddan
+ *
+ */
 public class ConnectGUI extends JPanel {
 
     private static final Integer WIN_WIDTH = 600;

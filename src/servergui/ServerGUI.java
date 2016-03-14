@@ -9,6 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * @author zeddan
+ *
+ */
 public class ServerGUI extends JPanel implements ActionListener{
 	private Controller controller = new Controller(this);
     private static final Integer WIN_WIDTH = 1024;

@@ -2,6 +2,10 @@ package gui;
 
 import server.User;
 
+/**
+ * @author zeddan
+ *
+ */
 public class UserMock extends User {
 
     String username;

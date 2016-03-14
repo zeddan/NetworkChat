@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * @author zeddan
+ *
+ */
 public class ServerGUI extends JPanel {
 
     private static final Integer WIN_WIDTH = 1024;

@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * @author zeddan
+ *
+ */
 public class ClientGUI extends JPanel {
 
     private JPanel pnlLeft = new JPanel(new FlowLayout());

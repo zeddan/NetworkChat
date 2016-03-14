@@ -12,6 +12,10 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * @author zeddan
+ *
+ */
 public class NewGroupDialog extends JPanel {
 
     private Map users;

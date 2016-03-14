@@ -5,6 +5,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * @author zeddan
+ *
+ */
 public class CustomButton extends JButton implements MouseListener {
 
     public CustomButton(String text) {
