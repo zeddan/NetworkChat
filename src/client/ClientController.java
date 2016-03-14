@@ -95,18 +95,14 @@ public class ClientController  {
 			}
 		}
 
-		//test
-		public void add(String str) {
-			System.out.println(str);
-			clientGui.textToChatWindow(str);
-		}
-		
 		private void readChatMessage(ChatMessage chatMessage) {
-			theMessage = chatMessage.getDeliveredFromServerTime() + ": from " + chatMessage.getSender() + ": "
+			theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
 					+ chatMessage.getChatMessage();
 			
+			clientGui.textToChatWindow(theMessage);
+			
 			if(chatMessage.hasPicture()) {
-				clientGui.pictureToChatWindow(chatMessage.getPicture());
+				//clientGui.pictureToChatWindow(chatMessage.getPicture());
 			}
 		}
 	}
