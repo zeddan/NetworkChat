@@ -26,7 +26,7 @@ public class ClientGUI extends JPanel {
 	private JPanel pnlLeftPrivate = new JPanel();
 	private JPanel pnlMain = new JPanel(new BorderLayout());
 	private JTextField tfChatWrite = new JTextField();
-	private JTextField tfChatWindow = new JTextField();
+	private JTextArea tfChatWindow = new JTextArea();
 	private JLabel lblGroupList = new JLabel("Groups", SwingConstants.CENTER);
 	private JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
 	private JLabel lblPrivateList = new JLabel("Private messages", SwingConstants.CENTER);
@@ -77,7 +77,11 @@ public class ClientGUI extends JPanel {
 				new LineBorder(new Color(145, 145, 145), 3),
 				new EmptyBorder(5, 5, 5, 5)));
 		pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
-
+		
+		//Create and add chatwindow to Scrollpanel
+		JScrollPane scroll = new JScrollPane (tfChatWindow);
+	    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	    
 		// add components to left panel
 		pnlLeftGroups.add(lblGroupList);
 		pnlLeftGroups.add(lblGroupCreate);
@@ -106,7 +110,7 @@ public class ClientGUI extends JPanel {
 
 		tfChatWindow.setEditable(false);
 
-		pnlMain.add(tfChatWindow, BorderLayout.CENTER);
+		pnlMain.add(scroll, BorderLayout.CENTER);
 		pnlMain.add(tfChatWrite, BorderLayout.SOUTH);
 		this.add(pnlLeft, BorderLayout.WEST);
 		this.add(pnlMain, BorderLayout.CENTER);
@@ -114,7 +118,7 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void textToChatWindow(String str) {
-		tfChatWindow.setText(tfChatWindow.getText() + "\n" + str);
+		tfChatWindow.append(str +"\n");
 	}
 
 	public void setupListeners() {
@@ -191,50 +195,52 @@ public class ClientGUI extends JPanel {
 		});
 	}
 
-    private class MessageDecoder extends Thread {
+	private class MessageDecoder extends Thread {
 
-        public MessageDecoder(){
-        }
+		public MessageDecoder(){
 
-        public void run(){
-            Message theMessage = null;
-            while(true){
-                try{
-                    if(clientController.hasMessage()){
-                        theMessage = clientController.getNextMessage();
+		}
 
-                        if(theMessage instanceof ChatMessage){
-                            readChatMessage((ChatMessage)theMessage);
-                        }
-                        if(theMessage instanceof DataMessage){
-                            readDataMessage((DataMessage)theMessage);
-                        }
-                    }
+		public void run(){
+			Message theMessage = null;
+			while(true){
+				try{
+					if(clientController.hasMessage()){
+						theMessage = clientController.getNextMessage();
 
-                }catch(Exception ex){
-                    //System.out.println(ex);
-                    ex.printStackTrace();
-                }
-            }
-        }
-        private void readChatMessage(ChatMessage chatMessage) {
-            String theMessage;
-            theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
-                    + chatMessage.getChatMessage();
+						if(theMessage instanceof ChatMessage){
+							readChatMessage((ChatMessage)theMessage);
+						}
+						if(theMessage instanceof DataMessage){
+							readDataMessage((DataMessage)theMessage);
+						}
+					}
 
-            textToChatWindow(theMessage);
+				}catch(Exception ex){
+					//System.out.println(ex);
+					ex.printStackTrace();
+				}
+			}
+		}
+		private void readChatMessage(ChatMessage chatMessage) {
+			String theMessage;
+			theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
+					+ chatMessage.getChatMessage();
 
-            if(chatMessage.hasPicture()) {
-                //pictureToChatWindow(chatMessage.getPicture());
-            }
-        }
-        private void readDataMessage(DataMessage dataMessage) {
-            String users = "";
-            for(String data: dataMessage.getData()) {
-                users += data + "\n";
-            }
-            //updateUserlist(users);
-        }
+			textToChatWindow(theMessage);
+
+			if(chatMessage.hasPicture()) {
+				//pictureToChatWindow(chatMessage.getPicture());
+			}
+		}
+		private void readDataMessage(DataMessage dataMessage) {
+			String users = "";
+			for(String data: dataMessage.getData()) {
+				users += data + "\n";
+			}
+			//updateUserlist(users);
+
+		}
 
 //		public static void main(String[] args) {
 //			SwingUtilities.invokeLater(new Runnable() {
