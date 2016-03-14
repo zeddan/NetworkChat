@@ -98,7 +98,8 @@ public class ClientGUI extends JPanel {
 
     private JScrollPane spChatWindow(JTextArea taChatWindow) {
         JScrollPane spChatWindow = new JScrollPane (taChatWindow);
-        spChatWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        spChatWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        spChatWindow.setBorder(null);
         return spChatWindow;
     }
 
@@ -111,12 +112,14 @@ public class ClientGUI extends JPanel {
 
     private JTextArea taUserList() {
         JTextArea taUserList = new JTextArea();
+        taUserList.setBackground(new Color(56, 56, 56));
         return taUserList;
     }
 
     private JScrollPane spUserList(JTextArea taUserList) {
         JScrollPane spUserList = new JScrollPane(taUserList);
-        spUserList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        spUserList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        spUserList.setBorder(null);
         return spUserList;
     }
 
