@@ -195,6 +195,9 @@ public class ClientGUI extends JPanel {
 		});
 	}
 
+    public void updateOnlineClients(String[] onlineClients) {
+    }
+
 	private class MessageDecoder extends Thread {
 
 		public MessageDecoder(){
