@@ -1,8 +1,8 @@
 package server;
 
-import java.util.Hashtable;
+import gui.server.ServerGUI;
 
-import serverGUI.ServerGUI;
+import java.util.Hashtable;
 
 /**
  * Del av gruppuppgift DA343A

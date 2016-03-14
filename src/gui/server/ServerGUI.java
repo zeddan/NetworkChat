@@ -1,4 +1,4 @@
-package serverGUI;
+package gui.server;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
