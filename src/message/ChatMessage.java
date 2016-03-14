@@ -34,6 +34,14 @@ public class ChatMessage extends Message {
 		return picture;
 	}
 	
+	/**
+	 * 
+	 * @return the chatMessage (String)
+	 */
+	public String getChatMessage(){
+		return chatMessage;
+	}
+	
 	public boolean hasPicture(){
 		return picture != null;
 	}

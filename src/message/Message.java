@@ -20,6 +20,14 @@ public class Message implements Serializable {
 	}
 	
 	/**
+	 * 
+	 * @return String the sender
+	 */
+	public String getSender() {
+		return sender;
+	}
+	
+	/**
 	 * Return an array of recievers of the message.
 	 * @return
 	 */
@@ -57,4 +65,6 @@ public class Message implements Serializable {
 	public void setSentFromServer(String deliveredFromServerTime){
 		this.deliveredFromServerTime = deliveredFromServerTime;
 	}
+	
+	
 }
