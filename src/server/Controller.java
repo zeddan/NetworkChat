@@ -2,19 +2,22 @@ package server;
 
 import java.util.Hashtable;
 
+import serverGUI.ServerGUI;
+
 /**
  * Del av gruppuppgift DA343A
  * @author Gustav Frigren
  *
  */
 public class Controller {
-	
-	private Connection connection;
+	private ServerGUI gui;
+	private Server server;
 	
 	private Hashtable<String, User> userTable; // table med alla anslutna Users
 	
-	public Controller() {
+	public Controller(ServerGUI gui) {
 		userTable = new Hashtable<String, User>();
+		this.gui = gui;
 	}
 	
 	public User findUser(String userName) {
@@ -26,9 +29,15 @@ public class Controller {
 		//TODO för att skicka: user.send(.....);
 	}
 	
-	public void startConnection(int port) {
-		connection = new Connection(this, port);
-		connection.run();
+	public void startServer(int port) {
+		server = new Server(this, port);
+		server.start();
+	}
+	
+	public void stopServer(){
+		if(server!=null){
+			server.interrupt();
+		}
 	}
 
 	public void removeUserFromList(String userName) {

@@ -29,7 +29,7 @@ public class User implements Runnable {
 
 	@Override
 	public void run() {
-		try {
+		try { // Funkar det med input före output?
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
