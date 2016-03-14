@@ -14,14 +14,17 @@ import java.awt.event.ActionListener;
  *
  */
 public class ServerGUI extends JPanel implements ActionListener{
-	private Controller controller = new Controller(this);
+
     private static final Integer WIN_WIDTH = 1024;
     private static final Integer WIN_HEIGHT = 600;
+
     private JPanel pnlLeft = new JPanel();
     private JPanel pnlMain = new JPanel();
     private JLabel lblPort = new JLabel("Port");
-    private JTextField tfPort = new JTextField("40023");
+    private JTextField tfPort = new JTextField("80023");
     private JButton btnStartStop = new JButton("Start");
+
+    private Controller controller = new Controller(this);
 
     public ServerGUI() {
         setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
