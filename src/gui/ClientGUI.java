@@ -26,12 +26,15 @@ public class ClientGUI extends JPanel {
 	private JPanel pnlLeftPrivate = new JPanel();
 	private JPanel pnlMain = new JPanel(new BorderLayout());
 	private JTextField tfChatWrite = new JTextField();
-	private JTextArea tfChatWindow = new JTextArea();
+	private JTextArea taChatWindow = new JTextArea();
+	private JTextArea taUserList = new JTextArea();
 	private JLabel lblGroupList = new JLabel("Groups", SwingConstants.CENTER);
 	private JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
 	private JLabel lblPrivateList = new JLabel("Private messages", SwingConstants.CENTER);
 	private JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
 	private JLabel lblChatUsers = new JLabel("Users", SwingConstants.CENTER);
+	private JScrollPane chatWindowScrollbar = new JScrollPane (taChatWindow);
+	private JScrollPane userListScrollbar = new JScrollPane (taUserList);
 
 	private static final Integer WIN_WIDTH = 1024;
 	private static final Integer WIN_HEIGHT = 600;
@@ -62,6 +65,8 @@ public class ClientGUI extends JPanel {
 		pnlLeftGroups.setPreferredSize(pnlLeftGroupsSize);
 		pnlLeftPrivate.setPreferredSize(pnlLeftPrivateSize);
 		pnlRight.setPreferredSize(pnlRightSize);
+		chatWindowScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		userListScrollbar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		// styling and behavior
 		pnlLeft.setBorder(new EmptyBorder(10,30,10,0));
@@ -69,16 +74,12 @@ public class ClientGUI extends JPanel {
 		pnlLeftGroups.setLayout(new BoxLayout(pnlLeftGroups, BoxLayout.Y_AXIS));
 		pnlLeftPrivate.setLayout(new BoxLayout(pnlLeftPrivate, BoxLayout.Y_AXIS));
 		pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
-		tfChatWindow.setBorder(null);
+		taChatWindow.setBorder(null);
 		tfChatWrite.setBorder(BorderFactory.createCompoundBorder(
 				new LineBorder(new Color(145, 145, 145), 3),
 				new EmptyBorder(5, 5, 5, 5)));
 		pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
-		
-		//Create and add chatwindow to Scrollpanel
-		JScrollPane scroll = new JScrollPane (tfChatWindow);
-	    scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	    
+
 		// add components to left panel
 		pnlLeftGroups.add(lblGroupList);
 		pnlLeftGroups.add(lblGroupCreate);
@@ -88,7 +89,8 @@ public class ClientGUI extends JPanel {
 		pnlLeft.add(pnlLeftPrivate);
 
 		// add components to right panel
-		pnlRight.add(lblChatUsers);
+		pnlRight.add(lblChatUsers);		
+		pnlRight.add(taUserList);
 
 		// panel bg colors
 		pnlLeft.setBackground(new Color(56, 56, 56));
@@ -105,9 +107,10 @@ public class ClientGUI extends JPanel {
 		lblPrivateCreate.setForeground(new Color(145,145,145));
 		lblChatUsers.setForeground(Color.WHITE);
 
-		tfChatWindow.setEditable(false);
+		taChatWindow.setEditable(false);
 
-		pnlMain.add(scroll, BorderLayout.CENTER);
+
+		pnlMain.add(userListScrollbar, BorderLayout.CENTER);
 		pnlMain.add(tfChatWrite, BorderLayout.SOUTH);
 		this.add(pnlLeft, BorderLayout.WEST);
 		this.add(pnlMain, BorderLayout.CENTER);
@@ -115,7 +118,14 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void textToChatWindow(String str) {
-		tfChatWindow.append(str +"\n");
+		taChatWindow.append(str +"\n");
+
+	}
+
+	public void updateOnlineClients(String[] onlineClients) {
+		for(String clients : onlineClients) {
+			taUserList.append(clients);
+		}
 	}
 
 	public void setupListeners() {
@@ -192,25 +202,23 @@ public class ClientGUI extends JPanel {
 		});
 	}
 
-    public void updateOnlineClients(String[] onlineClients) {
-    	
-    }
 
 
-		public static void main(String[] args) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-					JFrame frame = new JFrame("Client");
-					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.add(new ClientGUI(null));
-					frame.pack();
-					frame.setLocation(
-							dim.width/2-frame.getSize().width/2,
-							dim.height/2-frame.getSize().height/2);
-					frame.setVisible(true);
-				}
-			});
-		}
 
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+				JFrame frame = new JFrame("Client");
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.add(new ClientGUI(null));
+				frame.pack();
+				frame.setLocation(
+						dim.width/2-frame.getSize().width/2,
+						dim.height/2-frame.getSize().height/2);
+				frame.setVisible(true);
+			}
+		});
 	}
+
+}
