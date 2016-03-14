@@ -29,7 +29,8 @@ public class ClientController  {
 		connectGui = new ConnectGUI(this);
 		clientGui = new ClientGUI(this);
 		listener = new ConnectionListener();
-		createConnectFrame();
+		//createConnectFrame();
+		createClientFrame();
 		
 	}
 
@@ -50,9 +51,9 @@ public class ClientController  {
 				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				clientFrame.add(clientGui);
 				clientFrame.pack();
-				connectFrame.setLocation(
-						dim.width/2-connectFrame.getSize().width/2,
-						dim.height/2-connectFrame.getSize().height/2);
+//				connectFrame.setLocation(
+//						dim.width/2-connectFrame.getSize().width/2,
+//						dim.height/2-connectFrame.getSize().height/2);
 				clientFrame.setVisible(true);
 			}
 		});
@@ -89,6 +90,10 @@ public class ClientController  {
 	public Message getNextMessage(){
 		return listener.getNextMessage();
 	}
+	
+	public boolean hasMessage(){
+		return (listener.getMessageListSize() > 0);
+	}
 
 	public static void main(String[] args) {
 		new ClientController();	
@@ -96,13 +101,25 @@ public class ClientController  {
 	}
 
 	private class ConnectionListener implements MessageCallback {
-		String theMessage;
 		LinkedList<Message> messageList = new LinkedList<Message>(); 
+		
+		public ConnectionListener(){
+			ChatMessage message = new ChatMessage("Kalk", new String[] {"Coffe"}, "HEJSAN ALLA GLADA" , null);
+			messageList.add(message);
+			messageList.add(message);
+			messageList.add(message);
+			messageList.add(message);
+			messageList.add(message);
+		
+		}
 		public void add(Message message) {
 			messageList.add(message);
 		} 
 		public Message getNextMessage(){
-			return messageList.getLast();
+			return messageList.removeLast();
+		}
+		public int getMessageListSize(){
+			return messageList.size();
 		}
 
 	}
