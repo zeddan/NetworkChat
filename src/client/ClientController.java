@@ -51,9 +51,9 @@ public class ClientController  {
 				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				clientFrame.add(clientGui);
 				clientFrame.pack();
-//				connectFrame.setLocation(
-//						dim.width/2-connectFrame.getSize().width/2,
-//						dim.height/2-connectFrame.getSize().height/2);
+				clientFrame.setLocation(
+						dim.width/2-connectFrame.getSize().width/2,
+						dim.height/2-connectFrame.getSize().height/2);
 				clientFrame.setVisible(true);
 			}
 		});
