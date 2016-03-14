@@ -3,6 +3,7 @@ package gui.server;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
+import gui.button.CustomButton;
 import server.Controller;
 
 import java.awt.*;
@@ -21,8 +22,8 @@ public class ServerGUI extends JPanel implements ActionListener{
     private JPanel pnlLeft = new JPanel();
     private JPanel pnlMain = new JPanel();
     private JLabel lblPort = new JLabel("Port");
-    private JTextField tfPort = new JTextField("80023");
-    private JButton btnStartStop = new JButton("Start");
+    private JTextField tfPort = new JTextField("40023");
+    private CustomButton btnStartStop = new CustomButton("Start");
 
     private Controller controller = new Controller(this);
 
