@@ -90,7 +90,7 @@ public class ClientGUI extends JPanel {
 
 		// add components to right panel
 		pnlRight.add(lblChatUsers);		
-		pnlRight.add(taUserList);
+		pnlRight.add(userListScrollbar);
 
 		// panel bg colors
 		pnlLeft.setBackground(new Color(56, 56, 56));
@@ -110,7 +110,7 @@ public class ClientGUI extends JPanel {
 		taChatWindow.setEditable(false);
 
 
-		pnlMain.add(userListScrollbar, BorderLayout.CENTER);
+		pnlMain.add(chatWindowScrollbar, BorderLayout.CENTER);
 		pnlMain.add(tfChatWrite, BorderLayout.SOUTH);
 		this.add(pnlLeft, BorderLayout.WEST);
 		this.add(pnlMain, BorderLayout.CENTER);
