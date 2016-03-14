@@ -21,34 +21,30 @@ import java.net.Socket;
 //Och sedan uppdatera klienter
 //Skapa grupp med de klienter som finns i meddelandet (recipients)
 public class ClientConnection {
+
+    private static final String CMD_GET_CLIENTS = "Get clients";
+    private static final String[] RCP_SERVER = new String[] {"Server"};
+    private static final String SNDR_CLIENT = "Client";
 	
 	private Socket socket;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	private MessageListener messageListener;
-	private String[] clients;
-	
-	public ClientConnection(String address, int port,
-		MessageCallback messageCallback){
-		connect(address,port);		
+	private ServerConnection serverConnection;
+
+	public ClientConnection(String address,
+                            int port,
+                            MessageListener messageListener){
 		try {
+            socket = new Socket(address,port);
 			oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			messageListener = new MessageListener(ois, messageCallback);
+			serverConnection = new ServerConnection(ois, messageListener);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		updateClients();
+		getOnlineClients();
 	}
-	
-	public void connect(String address, int port){
-		try {
-			socket = new Socket(address,port);
-		} catch (IOException e) {
-			System.err.println("Could not connect!");
-		}
-	}
-	
+
 	public void close(){
 		try {
 			socket.close();
@@ -59,13 +55,9 @@ public class ClientConnection {
 		}
 	}
 	
-	public String[] getClients(){
-		return clients;
-	}
-	
-	public void startListener(){
-		messageListener.start();
-	}
+    public void startListener(){
+        serverConnection.start();
+    }
 	
 	public void sendMessage(Message message){
 		try {
@@ -76,34 +68,37 @@ public class ClientConnection {
 		}
 	}
 	
-	public void updateClients(){
-		DataMessage tempMes;
+	public String[] getOnlineClients(){
+        String[] onlineClients = {};
+        CommandMessage getClientsCommand = new CommandMessage(SNDR_CLIENT, RCP_SERVER, CMD_GET_CLIENTS);
 		try {
-			oos.writeObject(new CommandMessage("Client",new String[] {"server"},"Update Clients"));
+			oos.writeObject(getClientsCommand);
 			oos.flush();
-			tempMes = (DataMessage) ois.readObject();
-			clients = tempMes.getData();
+			DataMessage tempMes = (DataMessage) ois.readObject();
+			onlineClients = tempMes.getData();
 		} catch (IOException e) {
-			System.out.println("Message not sent to server");
+			System.out.println("The request not sent to server");
 		} catch (ClassNotFoundException e) {
 			System.out.println("Could not typecast");
 		}
+        return onlineClients;
 	}
 	
-	private class MessageListener extends Thread{
+	private class ServerConnection extends Thread{
 		private ObjectInputStream ois;
-		private MessageCallback mc;
+		private MessageListener listener;
 		
-		public MessageListener(ObjectInputStream ois,
-				MessageCallback mc){
+		public ServerConnection(ObjectInputStream ois,
+                                MessageListener listener){
 			this.ois = ois;
-			this.mc = mc;
+			this.listener = listener;
 		}
 		
 		public void run(){
 			while(true){
 				try {
-					mc.add((Message)ois.readObject());
+                    Message message = (Message) ois.readObject();
+					listener.update(message);
 					System.out.println("Callback made");
 				} catch (ClassNotFoundException | IOException e) {
 					System.out.println("Could not cast to Message");

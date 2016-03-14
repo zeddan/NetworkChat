@@ -2,10 +2,9 @@ package client;
 import gui.ClientGUI;
 import gui.ConnectGUI;
 import message.*;
-import javax.swing.Icon;
+
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import client.MessageCallback;
 import java.awt.*;
 import java.util.LinkedList;
 
@@ -15,32 +14,30 @@ import java.util.LinkedList;
  *
  */
 
-public class ClientController  {
+public class ClientController {
 	private ClientGUI clientGui;
 	private ConnectGUI connectGui;
 	private String userName;
 	private JFrame connectFrame;
 	private JFrame clientFrame;
-	private ConnectionListener listener;
 	private ClientConnection clientConnection;
+    private String[] onlineClients;
 
 
 	public ClientController () {
 		connectGui = new ConnectGUI(this);
-		clientGui = new ClientGUI(this);
-		listener = new ConnectionListener();
+		clientGui = new ClientGUI(new ClientGUIListener());
 		//createConnectFrame();
 		createClientFrame();
-		
 	}
-
 
 	public void connect(String address, int port, String userName) {
 		this.userName = userName;
-		clientConnection = new ClientConnection(address, port, listener);
+		clientConnection = new ClientConnection(address, port, new ClientConnectionListener());
 		clientConnection.startListener();
-		createClientFrame();
-
+        onlineClients = clientConnection.getOnlineClients();
+        clientGui.updateOnlineClients(onlineClients);
+        createClientFrame();
 	}
 
 	public void createClientFrame() {
@@ -75,52 +72,24 @@ public class ClientController  {
 		});
 	}
 
-	public void sendMessage(String chatMessage, String[] recipients) {
-		//if pic
-		
-		//else pic
-		clientConnection.sendMessage( new ChatMessage(userName, recipients, chatMessage, null));
+    private class ClientGUIListener implements MessageListener {
+        @Override
+        public void update(Message message) {
+            clientConnection.sendMessage(message);
+        }
+    }
 
-	}
-	
-	public void addPicture() {
-		
-	}
-	
-	public Message getNextMessage(){
-		return listener.getNextMessage();
-	}
-	
-	public boolean hasMessage(){
-		return (listener.getMessageListSize() > 0);
-	}
-
-	public static void main(String[] args) {
-		new ClientController();	
-
-	}
-
-	private class ConnectionListener implements MessageCallback {
-		LinkedList<Message> messageList = new LinkedList<Message>(); 
-		
-		public ConnectionListener(){
-			ChatMessage message = new ChatMessage("Kalk", new String[] {"Coffe"}, "HEJSAN ALLA GLADA" , null);
-			messageList.add(message);
-			messageList.add(message);
-			messageList.add(message);
-			messageList.add(message);
-			messageList.add(message);
-		
+	private class ClientConnectionListener implements MessageListener {
+        @Override
+		public void update(Message message) {
+            if (message instanceof DataMessage)
+                clientGui.newDataMessage((DataMessage) message);
+            else if (message instanceof ChatMessage)
+                clientGui.newChatMessage((ChatMessage) message);
 		}
-		public void add(Message message) {
-			messageList.add(message);
-		} 
-		public Message getNextMessage(){
-			return messageList.removeLast();
-		}
-		public int getMessageListSize(){
-			return messageList.size();
-		}
-
 	}
+
+    public static void main(String[] args) {
+        new ClientController();
+    }
 }
