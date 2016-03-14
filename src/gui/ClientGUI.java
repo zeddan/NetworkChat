@@ -191,52 +191,50 @@ public class ClientGUI extends JPanel {
 		});
 	}
 
-	private class MessageDecoder extends Thread {
+    private class MessageDecoder extends Thread {
 
-		public MessageDecoder(){
+        public MessageDecoder(){
+        }
 
-		}
+        public void run(){
+            Message theMessage = null;
+            while(true){
+                try{
+                    if(clientController.hasMessage()){
+                        theMessage = clientController.getNextMessage();
 
-		public void run(){
-			Message theMessage = null;
-			while(true){
-				try{
-					if(clientController.hasMessage()){
-						theMessage = clientController.getNextMessage();
+                        if(theMessage instanceof ChatMessage){
+                            readChatMessage((ChatMessage)theMessage);
+                        }
+                        if(theMessage instanceof DataMessage){
+                            readDataMessage((DataMessage)theMessage);
+                        }
+                    }
 
-						if(theMessage instanceof ChatMessage){
-							readChatMessage((ChatMessage)theMessage);
-						}
-						if(theMessage instanceof DataMessage){
-							readDataMessage((DataMessage)theMessage);
-						}
-					}
+                }catch(Exception ex){
+                    //System.out.println(ex);
+                    ex.printStackTrace();
+                }
+            }
+        }
+        private void readChatMessage(ChatMessage chatMessage) {
+            String theMessage;
+            theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
+                    + chatMessage.getChatMessage();
 
-				}catch(Exception ex){
-					//System.out.println(ex);
-					ex.printStackTrace();
-				}
-			}
-		}
-		private void readChatMessage(ChatMessage chatMessage) {
-			String theMessage;
-			theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
-					+ chatMessage.getChatMessage();
+            textToChatWindow(theMessage);
 
-			textToChatWindow(theMessage);
-
-			if(chatMessage.hasPicture()) {
-				//pictureToChatWindow(chatMessage.getPicture());
-			}
-		}
-		private void readDataMessage(DataMessage dataMessage) {
-			String users = "";
-			for(String data: dataMessage.getData()) {
-				users += data + "\n";
-			}
-			//updateUserlist(users);
-
-		}
+            if(chatMessage.hasPicture()) {
+                //pictureToChatWindow(chatMessage.getPicture());
+            }
+        }
+        private void readDataMessage(DataMessage dataMessage) {
+            String users = "";
+            for(String data: dataMessage.getData()) {
+                users += data + "\n";
+            }
+            //updateUserlist(users);
+        }
 
 //		public static void main(String[] args) {
 //			SwingUtilities.invokeLater(new Runnable() {
