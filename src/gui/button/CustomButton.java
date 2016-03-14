@@ -31,6 +31,16 @@ public class CustomButton extends JButton implements MouseListener {
         super.paintComponent(g);
     }
 
+    public JOptionPane getOptionPane(JComponent parent) {
+        JOptionPane pane;
+        if (parent instanceof JOptionPane)
+            pane = (JOptionPane) parent;
+        else
+            pane = getOptionPane((JComponent) parent.getParent());
+        return pane;
+    }
+
+
     @Override
     public void mouseClicked(MouseEvent e) {
 
