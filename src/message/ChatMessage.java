@@ -26,7 +26,7 @@ public class ChatMessage extends Message {
 		this.chatMessage = chatMessage;
 		this.picture = picture;
 	}
-		
+	
 	/**
 	 * @return the picture (Icon)
 	 */
@@ -46,4 +46,7 @@ public class ChatMessage extends Message {
 		return picture != null;
 	}
 	
+	public String toString(){
+		return "[" + super.getDeliveredToServerTime() + "] " + "<" + super.getSender() + "> " + getChatMessage();  
+	}
 }
