@@ -1,9 +1,12 @@
 package gui;
 
+import gui.button.CustomButton;
 import server.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -23,7 +26,11 @@ public class NewGroupDialog extends JPanel {
         String title = "Select users";
         int optionType = JOptionPane.YES_NO_OPTION;
         int messageType = JOptionPane.PLAIN_MESSAGE;
-        String[] options = {"Cancel", "Create group"};
+        final CustomButton[] options = {
+                new CustomButton("Cancel"),
+                new CustomButton("Create group")};
+        addActionListener(options[0]);
+        addActionListener(options[1]);
         int i = JOptionPane.showOptionDialog(
                 null,
                 new NewGroupDialog(users),
@@ -34,6 +41,17 @@ public class NewGroupDialog extends JPanel {
                 options,
                 null);
         return i == 1 ? selectedUsers : null;
+    }
+
+    private static void addActionListener(final CustomButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComponent jc = (JComponent) e.getSource();
+                JOptionPane pane = button.getOptionPane(jc);
+                pane.setValue(button);
+            }
+        });
     }
 
     public NewGroupDialog(Map<String, User> users) {
