@@ -46,12 +46,9 @@ public class ClientGUI extends JPanel {
 	private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
 	private ClientController clientController;
-	private MessageDecoder decoder;
 
 	public ClientGUI(ClientController clientController) {
 		this.clientController = clientController;
-		decoder = new MessageDecoder();
-        decoder.start();
 
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
@@ -196,70 +193,24 @@ public class ClientGUI extends JPanel {
 	}
 
     public void updateOnlineClients(String[] onlineClients) {
+    	
     }
 
-	private class MessageDecoder extends Thread {
 
-		public MessageDecoder(){
-
-		}
-
-		public void run(){
-			Message theMessage = null;
-			while(true){
-				try{
-					if(clientController.hasMessage()){
-						theMessage = clientController.getNextMessage();
-
-						if(theMessage instanceof ChatMessage){
-							readChatMessage((ChatMessage)theMessage);
-						}
-						if(theMessage instanceof DataMessage){
-							readDataMessage((DataMessage)theMessage);
-						}
-					}
-
-				}catch(Exception ex){
-					//System.out.println(ex);
-					ex.printStackTrace();
+		public static void main(String[] args) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+					JFrame frame = new JFrame("Client");
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.add(new ClientGUI(null));
+					frame.pack();
+					frame.setLocation(
+							dim.width/2-frame.getSize().width/2,
+							dim.height/2-frame.getSize().height/2);
+					frame.setVisible(true);
 				}
-			}
+			});
 		}
-		private void readChatMessage(ChatMessage chatMessage) {
-			String theMessage;
-			theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
-					+ chatMessage.getChatMessage();
-
-			textToChatWindow(theMessage);
-
-			if(chatMessage.hasPicture()) {
-				//pictureToChatWindow(chatMessage.getPicture());
-			}
-		}
-		private void readDataMessage(DataMessage dataMessage) {
-			String users = "";
-			for(String data: dataMessage.getData()) {
-				users += data + "\n";
-			}
-			//updateUserlist(users);
-
-		}
-
-//		public static void main(String[] args) {
-//			SwingUtilities.invokeLater(new Runnable() {
-//				public void run() {
-//					Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//					JFrame frame = new JFrame("Client");
-//					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//					frame.add(new ClientGUI(null));
-//					frame.pack();
-//					frame.setLocation(
-//							dim.width/2-frame.getSize().width/2,
-//							dim.height/2-frame.getSize().height/2);
-//					frame.setVisible(true);
-//				}
-//			});
-//		}
 
 	}
-}
