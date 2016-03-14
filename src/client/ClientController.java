@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import client.MessageCallback;
 import java.awt.*;
+import java.util.LinkedList;
 
 /**
  * 
@@ -29,6 +30,7 @@ public class ClientController  {
 		clientGui = new ClientGUI(this);
 		listener = new ConnectionListener();
 		createConnectFrame();
+		
 	}
 
 
@@ -73,12 +75,19 @@ public class ClientController  {
 	}
 
 	public void sendMessage(String chatMessage, String[] recipients) {
+		//if pic
+		
+		//else pic
 		clientConnection.sendMessage( new ChatMessage(userName, recipients, chatMessage, null));
 
 	}
-
-	public void sendMessage(String chatMessage, String[] recipients , Icon icon) {
-		clientConnection.sendMessage(new ChatMessage(userName, recipients, chatMessage, icon));
+	
+	public void addPicture() {
+		
+	}
+	
+	public Message getNextMessage(){
+		return listener.getNextMessage();
 	}
 
 	public static void main(String[] args) {
@@ -88,24 +97,13 @@ public class ClientController  {
 
 	private class ConnectionListener implements MessageCallback {
 		String theMessage;
+		LinkedList<Message> messageList = new LinkedList<Message>(); 
 		public void add(Message message) {
-			
-			if(message instanceof ChatMessage) {
-				readChatMessage((ChatMessage)message);
-			}
+			messageList.add(message);
+		} 
+		public Message getNextMessage(){
+			return messageList.getLast();
 		}
 
-		private void readChatMessage(ChatMessage chatMessage) {
-			theMessage = "Time: " + chatMessage.getDeliveredFromServerTime() + " From: " + chatMessage.getSender() + ": "
-					+ chatMessage.getChatMessage();
-			
-			clientGui.textToChatWindow(theMessage);
-			
-			if(chatMessage.hasPicture()) {
-				//clientGui.pictureToChatWindow(chatMessage.getPicture());
-			}
-		}
 	}
-
-
 }
