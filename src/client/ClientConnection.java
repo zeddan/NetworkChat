@@ -14,6 +14,12 @@ import java.net.Socket;
 /**
  * @author Christoffer Strandberg
  */
+
+// ta emot lista med klienter som är online
+//cmd-meddelande hej vi är här ge lista med klienter
+//Se till att klienten läggs till vid anslutning. Via commandMessage
+//Och sedan uppdatera klienter
+//Skapa grupp med de klienter som finns i meddelandet (recipients)
 public class ClientConnection {
 	
 	private Socket socket;
