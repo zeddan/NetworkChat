@@ -5,9 +5,8 @@ package message;
  * @author KEJ
  *
  */
-public class CommandMessage {
+public class CommandMessage extends Message {
 
-    private String sender;
 	private int command;
 	
 	/**
@@ -16,7 +15,7 @@ public class CommandMessage {
 	 * @param command the command to be done.
 	 */
 	public CommandMessage(String sender, int command){
-        this.sender = sender;
+        super(sender, null);
 		this.command = command;
 	}
 	
@@ -24,7 +23,4 @@ public class CommandMessage {
 		return command;
 	}
 
-    public String getSender() {
-        return sender;
-    }
 }
