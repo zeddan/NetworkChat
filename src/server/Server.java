@@ -41,7 +41,7 @@ public class Server extends Thread {
 		while(!Thread.interrupted()) {
 			try {
 				socket = serverSocket.accept();
-				threadPool.execute(new User(controller, socket)); // här skapas ett nytt User-objekt
+				threadPool.execute(new User(controller, socket));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

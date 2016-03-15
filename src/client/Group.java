@@ -1,4 +1,4 @@
-package message;
+package client;
 
 public class Group{
 	private String[] recipients;

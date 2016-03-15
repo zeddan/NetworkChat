@@ -1,5 +1,7 @@
 package message;
 
+import client.Group;
+
 /**
  * Class representing data to be transfered, e.g. data from server to client. 
  * @author KEJ
