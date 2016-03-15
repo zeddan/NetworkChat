@@ -41,13 +41,14 @@ public class ClientGUI extends JPanel {
 
     private MessageListener listener;
     private String username;
+    private Group selectedGroup;
     
-    private ArrayList<Group> groups;
+    private ArrayList<Group> groupList;
     private ArrayList<JLabel> groupLabels;
 
 	public ClientGUI(MessageListener listener) {
         this.listener = listener;
-        groups = new ArrayList<Group>();
+        groupList = new ArrayList<Group>();
         groupLabels = new ArrayList<JLabel>();
         
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
@@ -185,7 +186,7 @@ public class ClientGUI extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Wazzzuuup");
+				setSelectedGroup(lbl.getText());
 			}
 
 			@Override
@@ -215,14 +216,7 @@ public class ClientGUI extends JPanel {
     	return lbl;
     }
     
-    public void addGroup(Group group) {
-
-    	JLabel label = lblNewGroup(group.getGroupName());
-    	groups.add(group);
-    	groupLabels.add(label);
-    	pnlLeftGroups.add(label);
-    	pnlLeftGroups.updateUI();
-    }
+   
 
     private JLabel lblGroupCreate() {
         final JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
@@ -246,8 +240,8 @@ public class ClientGUI extends JPanel {
                 
                 do{
                 	groupName = JOptionPane.showInputDialog("Enter group name");
-                	for(int i = 0; i < groups.size(); i++){
-                		groupNameUsed = groups.get(i).isEqualTo(groupName);
+                	for(int i = 0; i < groupList.size(); i++){
+                		groupNameUsed = groupList.get(i).isEqualTo(groupName);
                 	}
                 }while(groupNameUsed);
                 
@@ -327,7 +321,7 @@ public class ClientGUI extends JPanel {
 //                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 //                        ChatMessage message = new ChatMessage(
 //                                username,
-//                                //recipients,
+//                                selectedGroup,
 //                                tfChatWrite.getText(),
 //                                //icon
 //                                )
@@ -389,6 +383,23 @@ public class ClientGUI extends JPanel {
         for(String clients : onlineClients) {
             taUserList.append(clients);
         }
+    }
+    
+    public void setSelectedGroup(String groupName) {
+    	for(Group group : groupList) {
+    		if(group.getGroupName().equals(groupName)) {
+    			selectedGroup = group;
+    		}
+    	}
+    	System.out.println(selectedGroup.getGroupName());
+    }
+    
+    public void addGroup(Group group) {
+    	JLabel label = lblNewGroup(group.getGroupName());
+    	groupList.add(group);
+    	groupLabels.add(label);
+    	pnlLeftGroups.add(label);
+    	pnlLeftGroups.updateUI();
     }
 
     public void setUsername(String username) {
