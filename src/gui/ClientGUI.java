@@ -1,5 +1,6 @@
 package gui;
 
+import client.Group;
 import client.MessageListener;
 import gui.button.CustomButton;
 import message.*;
@@ -37,9 +38,13 @@ public class ClientGUI extends JPanel {
 
     private MessageListener listener;
     private String username;
+    
+    private ArrayList<Group> groups;
 
 	public ClientGUI(MessageListener listener) {
         this.listener = listener;
+        groups = new ArrayList<Group>();
+        
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -173,6 +178,8 @@ public class ClientGUI extends JPanel {
         lblGroupCreate.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
+            	boolean groupNameUsed = false;
+            	String groupName;
                 //  mock start
                 Map<String, User> users = new Hashtable<>();
                 for (int i=0; i < 22; i++) {
@@ -180,9 +187,22 @@ public class ClientGUI extends JPanel {
                 } // mock end
                 ArrayList<User> selectedUsers = NewGroupDialog.display(users);
                 String s = "";
-                if (selectedUsers != null && selectedUsers.size() > 0)
-                    for (User u : selectedUsers)
-                        s += u.getUserName() + " ";
+                String[] recipients = new String[selectedUsers.size()];
+               
+                for(int i = 0; i < selectedUsers.size(); i++){
+                	recipients[i] = selectedUsers.get(i).getUserName();
+                }
+                
+                do{
+                	groupName = JOptionPane.showInputDialog("Enter group name");
+                	for(int i = 0; i < groups.size(); i++){
+                		groupNameUsed = groups.get(i).isEqualTo(groupName);
+                	}
+                }while(groupNameUsed);
+                 		
+               groups.add(new Group(recipients, groupName));
+                
+                System.out.println();
                 JOptionPane.showMessageDialog(null, s);
             }
 
@@ -255,15 +275,15 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    //    ChatMessage message = new ChatMessage(
-                    //            username,
-                    //            //recipients,
-                    //            //message,
-                    //            //icon
-                    //            )
-                    //    listener.update(new ChatMessage());
-                }
+//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+//                        ChatMessage message = new ChatMessage(
+//                                username,
+//                                //recipients,
+//                                tfChatWrite.getText(),
+//                                //icon
+//                                )
+//                        listener.update(new ChatMessage());
+//                }
             }
 
             @Override
