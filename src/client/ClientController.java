@@ -49,8 +49,8 @@ public class ClientController {
 				clientFrame.add(clientGui);
 				clientFrame.pack();
 				clientFrame.setLocation(
-						dim.width/2-connectFrame.getSize().width/2,
-						dim.height/2-connectFrame.getSize().height/2);
+						dim.width/2-clientFrame.getSize().width/2,
+						dim.height/2-clientFrame.getSize().height/2);
 				clientFrame.setVisible(true);
 			}
 		});
