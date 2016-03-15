@@ -1,5 +1,7 @@
 package message;
 
+import client.Group;
+
 /**
  * Class representing a command, e.g for sending a command from client to server.
  * @author KEJ

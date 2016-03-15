@@ -4,6 +4,8 @@ import java.io.Serializable;
 import client.Group;
 import javax.swing.Icon;
 
+import client.Group;
+
 // Skall den kompletteras med hasPicture()?
 /**
  * Class for messages to be sent between client-server-client.

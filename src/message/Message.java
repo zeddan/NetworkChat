@@ -2,6 +2,8 @@ package message;
 import client.Group;
 import java.io.Serializable;
 
+import client.Group;
+
 public class Message implements Serializable {
 	private String sender;
 	private Group group;
