@@ -5,6 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import message.ChatMessage;
+import message.CommandMessage;
+import message.Commands;
+import message.DataMessage;
+
 /**
  * Del av gruppuppgift DA343A
  * @author Gustav Frigren
@@ -29,22 +34,29 @@ public class User implements Runnable {
 
 	@Override
 	public void run() {
-		try { // Funkar det med input före output?
+		try { // Funkar det med input fï¿½re output?
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		//TODO Check user ID here? (to set userName)........................
-
 		while(socket != null && socket.isConnected() && active == true) {
 			try {
 				Object object = inputStream.readObject();
-				
-				//TODO decodeMessage..............................
-				//TODO vet ju inte exakt vad vi har fÃ¶r protokoll.
-				
+				if(object instanceof CommandMessage) {
+					CommandMessage cm = (CommandMessage) object;
+					int type = cm.getCommand();
+					if(type == Commands.GET_CLIENTS_ONLINE) {
+						userName = cm.getSender();
+						
+						DataMessage dataMessage = new DataMessage(null, null, controller.getClientsOnline());
+					}
+				} else if(object instanceof ChatMessage) {
+					controller.processMessage(object);
+				}
+				String string = controller.decodeMessage(object);
+				//controller.addUserToList(newUser);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

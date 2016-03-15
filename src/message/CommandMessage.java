@@ -6,7 +6,8 @@ package message;
  *
  */
 public class CommandMessage extends Message {
-	private String command;
+	
+	private int command;
 	
 	/**
 	 * Constructor
@@ -14,12 +15,12 @@ public class CommandMessage extends Message {
 	 * @param recipients
 	 * @param command, the command to be done.
 	 */
-	public CommandMessage(String sender, String[] recipients, String command){
-		super(sender, recipients);
+	public CommandMessage(String sender, Group group, int command){
+		super(sender, group);
 		this.command = command;
 	}
 	
-	public String getCommand(){
+	public int getCommand(){
 		return command;
 	}
 }

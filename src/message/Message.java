@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
 	private String sender;
-	private String[] recipients;
+	private Group group;
 	private String deliveredToServerTime;
 	private String deliveredFromServerTime;
 	
@@ -14,9 +14,9 @@ public class Message implements Serializable {
 	 * @param recipients, the recipients. Can be one or many
 	 * @param message, the message to be sent.
 	 */
-	public Message(String sender, String[] recipients){
+	public Message(String sender, Group group){
 		this.sender = sender;
-		this.recipients = recipients;
+		this.group = recipients;
 	}
 	
 	/**
@@ -31,8 +31,8 @@ public class Message implements Serializable {
 	 * Return an array of recievers of the message.
 	 * @return
 	 */
-	public String[] getRecipients(){
-		return recipients;
+	public Group getRecipients(){
+		return group;
 	}
 	
 	/**

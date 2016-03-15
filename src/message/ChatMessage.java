@@ -21,8 +21,8 @@ public class ChatMessage extends Message {
 	 * @param message. The text message to send
 	 * @param picture. The picture (Icon) to send.
 	 */
-	public ChatMessage(String from, String[] recipients, String chatMessage, Icon picture){
-		super(from, recipients);
+	public ChatMessage(String from, Group group, String chatMessage, Icon picture){
+		super(from, group);
 		this.chatMessage = chatMessage;
 		this.picture = picture;
 	}

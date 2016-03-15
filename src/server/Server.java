@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * This is the server class
  * Del av gruppuppgift DA343A
- * @author Gustav Frigren, Karl-Ebbe Jönsson
+ * @author Gustav Frigren, Karl-Ebbe Jï¿½nsson
  *
  */
 public class Server extends Thread {
@@ -26,9 +26,7 @@ public class Server extends Thread {
 		this.controller = controller;
 		this.port = port;
 	}
-	
-	//Hur stoppar man servertråden när man inte har en referens till tråden?
-	
+
 	public void stopServer(){
 		this.interrupt();
 	}
@@ -49,5 +47,4 @@ public class Server extends Thread {
 			}
 		}
 	}
-
 }
