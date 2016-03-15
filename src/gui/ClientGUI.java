@@ -1,7 +1,7 @@
 package gui;
 
 import client.Group;
-import client.MessageListener;
+import client.interfaces.MessageListener;
 import gui.button.CustomButton;
 import message.*;
 import server.User;
