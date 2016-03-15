@@ -1,6 +1,8 @@
 package client;
 
+import client.interfaces.MessageListener;
 import message.CommandMessage;
+import message.Commands;
 import message.DataMessage;
 import message.Message;
 
@@ -20,30 +22,28 @@ import java.net.Socket;
 //Se till att klienten läggs till vid anslutning. Via commandMessage
 //Och sedan uppdatera klienter
 //Skapa grupp med de klienter som finns i meddelandet (recipients)
-public class ClientConnection {
+public class ClientConnection implements Runnable {
 
-    private static final String CMD_GET_CLIENTS = "Get clients";
-    private static final String[] RCP_SERVER = new String[] {"Server"};
-    private static final String SNDR_CLIENT = "Client";
-	
 	private Socket socket;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
-	private ServerConnection serverConnection;
+    private MessageListener listener;
+    private String username;
+    private Thread thread = new Thread(this);
 
-	public ClientConnection(String address,
-                            int port,
-                            MessageListener messageListener){
+	public ClientConnection(String address, int port) {
 		try {
             socket = new Socket(address,port);
 			oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			serverConnection = new ServerConnection(ois, messageListener);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		getOnlineClients();
 	}
+
+    public void start() {
+        thread.start();
+    }
 
 	public void close(){
 		try {
@@ -54,11 +54,7 @@ public class ClientConnection {
 			System.err.println("Socket not closed!");
 		}
 	}
-	
-    public void startListener(){
-        serverConnection.start();
-    }
-	
+
 	public void sendMessage(Message message){
 		try {
 			oos.writeObject(message);
@@ -67,43 +63,36 @@ public class ClientConnection {
 			System.out.println("Message could not be sent!");
 		}
 	}
-	
-	public String[] getOnlineClients(){
-        String[] onlineClients = {};
-        CommandMessage getClientsCommand = new CommandMessage(SNDR_CLIENT, RCP_SERVER, CMD_GET_CLIENTS);
-		try {
-			oos.writeObject(getClientsCommand);
-			oos.flush();
-			DataMessage tempMes = (DataMessage) ois.readObject();
-			onlineClients = tempMes.getData();
-		} catch (IOException e) {
-			System.out.println("The request not sent to server");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Could not typecast");
-		}
-        return onlineClients;
-	}
-	
-	private class ServerConnection extends Thread{
-		private ObjectInputStream ois;
-		private MessageListener listener;
-		
-		public ServerConnection(ObjectInputStream ois,
-                                MessageListener listener){
-			this.ois = ois;
-			this.listener = listener;
-		}
-		
-		public void run(){
-			while(true){
-				try {
-                    Message message = (Message) ois.readObject();
-					listener.update(message);
-					System.out.println("Callback made");
-				} catch (ClassNotFoundException | IOException e) {
-					System.out.println("Could not cast to Message");
-				}
-			}
-		}
-	}
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setListener(MessageListener listener) {
+        this.listener = listener;
+    }
+
+    public void run(){
+        try {
+            CommandMessage cm = new CommandMessage(username, Commands.GET_CLIENTS_ONLINE);
+            oos.writeObject(cm);
+            oos.flush();
+            Message message = (Message) ois.readObject();
+            listener.update(message);
+        } catch (IOException e) {
+            System.out.println("The request not sent to server");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not typecast");
+        }
+
+        while(true){
+            try {
+                Message message = (Message) ois.readObject();
+                listener.update(message);
+                System.out.println("Callback made");
+            } catch (ClassNotFoundException | IOException e) {
+                System.out.println("Could not cast to Message");
+            }
+        }
+    }
 }
