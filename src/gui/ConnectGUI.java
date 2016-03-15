@@ -1,9 +1,6 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-
-import client.ClientController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +11,10 @@ import java.awt.event.ActionListener;
  *
  */
 public class ConnectGUI extends JPanel {
+
+    public interface ConnectGUIListener {
+        void onConnect(String address, int port, String username);
+    }
 
     private static final Integer WIN_WIDTH = 600;
     private static final Integer WIN_HEIGHT = 150;
@@ -28,9 +29,9 @@ public class ConnectGUI extends JPanel {
     private JButton btnConnect = new JButton("Connect");
     private Dimension componentSize = new Dimension(200, 25);
 
-    public ConnectGUI(ClientController clientController) {
+    public ConnectGUI(ConnectGUIListener listener) {
         setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
-        setupConnectButtonListener(clientController);
+        setupConnectButtonListener(listener);
         lblUsername.setPreferredSize(componentSize);
         lblAddress.setPreferredSize(componentSize);
         lblPort.setPreferredSize(componentSize);
@@ -48,7 +49,7 @@ public class ConnectGUI extends JPanel {
         add(btnConnect);
     }
 
-    private void setupConnectButtonListener(final ClientController clientController) {
+    private void setupConnectButtonListener(final ConnectGUIListener listener) {
         btnConnect.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == btnConnect) {
@@ -81,7 +82,7 @@ public class ConnectGUI extends JPanel {
                     }
 
                     if (!error)
-                        clientController.connect(address, port, username);
+                        listener.onConnect(address, port, username);
                 }
             }
         });
@@ -91,19 +92,19 @@ public class ConnectGUI extends JPanel {
         JOptionPane.showMessageDialog(null, message);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-                JFrame frame = new JFrame("NetworkChat");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new ConnectGUI(new ClientController()));
-                frame.pack();
-                frame.setLocation(
-                        dim.width/2-frame.getSize().width/2,
-                        dim.height/2-frame.getSize().height/2);
-                frame.setVisible(true);
-            }
-        });
-    }
+    //public static void main(String[] args) {
+    //    SwingUtilities.invokeLater(new Runnable() {
+    //        public void run() {
+    //            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    //            JFrame frame = new JFrame("NetworkChat");
+    //            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    //            frame.add(new ConnectGUI(new ClientController()));
+    //            frame.pack();
+    //            frame.setLocation(
+    //                    dim.width/2-frame.getSize().width/2,
+    //                    dim.height/2-frame.getSize().height/2);
+    //            frame.setVisible(true);
+    //        }
+    //    });
+    //}
 }
