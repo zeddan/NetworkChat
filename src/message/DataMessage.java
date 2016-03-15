@@ -6,10 +6,11 @@ package message;
  *
  */
 public class DataMessage extends Message{
+	
 	private String[] data;
 	
-	public DataMessage(String sender, String[] recipients, String[] data){
-		super(sender, recipients);
+	public DataMessage(String sender, Group group, String[] data){
+		super(sender, group);
 		this.data = data;
 	}
 	
