@@ -188,7 +188,7 @@ public class ClientGUI extends JPanel {
         return lblPrivateCreate;
     }
     private JLabel lblNewGroup(String name){
-    	JLabel lbl = new JLabel(name);
+    	final JLabel lbl = new JLabel(name);
     	lbl.setForeground(new Color(145,145,145));
     	lbl.addMouseListener(new MouseListener(){
 
@@ -315,7 +315,7 @@ public class ClientGUI extends JPanel {
     }
 
     private JTextField tfChatWrite() {
-        JTextField tfChatWrite = new JTextField();
+        final JTextField tfChatWrite = new JTextField();
         tfChatWrite.setPreferredSize(new Dimension(WIN_WIDTH/3-70, WIN_HEIGHT/20));
         tfChatWrite.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(new Color(145, 145, 145), 3),
