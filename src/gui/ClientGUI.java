@@ -9,11 +9,14 @@ import server.User;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.swing.JFileChooser;
 
 /**
  * @author zeddan
@@ -35,13 +38,16 @@ public class ClientGUI extends JPanel {
 
 	private JTextArea taUserList;
     private JTextArea taChatWindow;
-    
+    private JFileChooser chooser = new JFileChooser();
+    private FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "JPG & PNG Images", "jpg", "png");
     
     private JPanel pnlLeftGroups;
 
     private MessageListener listener;
-    private String username;
+    private String userName;
     private Group selectedGroup;
+    private String selectedImage;
     
     private ArrayList<Group> groupList;
     private ArrayList<JLabel> groupLabels;
@@ -318,15 +324,10 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//                        ChatMessage message = new ChatMessage(
-//                                username,
-//                                selectedGroup,
-//                                tfChatWrite.getText(),
-//                                //icon
-//                                )
-//                        listener.update(new ChatMessage());
-//                }
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        ChatMessage message = new ChatMessage(userName, selectedGroup, tfChatWrite.getText(), null);
+                        listener.update(message);
+                }
             }
 
             @Override
@@ -341,7 +342,16 @@ public class ClientGUI extends JPanel {
         btnImageChooser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // open file chooser
+               try {
+            	chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                 selectedImage = chooser.getSelectedFile().getAbsolutePath();
+                }
+               } catch (Exception e1) {
+            	   e1.printStackTrace();
+               }
+                System.out.println(chooser.getSelectedFile().getAbsolutePath());
             }
 
             @Override
@@ -403,7 +413,7 @@ public class ClientGUI extends JPanel {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public static void main(String[] args) {
