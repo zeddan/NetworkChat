@@ -251,9 +251,7 @@ public class ClientGUI extends JPanel {
                 	}
                 }while(groupNameUsed);
                 
-                addGroup(new Group(recipients, groupName));
-                
-                System.out.println();
+                addGroup(new Group(recipients, groupName));                
                 JOptionPane.showMessageDialog(null, "Group " +  groupName + " created");
             }
 
@@ -289,44 +287,6 @@ public class ClientGUI extends JPanel {
         pnlLeftGroups.setLayout(new BoxLayout(pnlLeftGroups, BoxLayout.Y_AXIS));
         pnlLeftGroups.setPreferredSize(pnlLeftGroupsSize);
         pnlLeftGroups.setOpaque(false);
-        
-//        pnlLeftGroups.addMouseListener(new MouseListener(){
-//
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				for(JLabel label : groupLabels){
-//					if(e.getSource() == label.getFocusListeners()){
-//						System.out.println("hest");
-//					}
-//				}
-//				
-//			}
-//
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//        	
-//        });
         return pnlLeftGroups;
     }
 
