@@ -31,6 +31,7 @@ public class Controller {
 	
 	public Controller(ServerGUI gui) {
 		onlineUserTable = new Hashtable<String, User>();
+		messageQueue = new Hashtable<String, ArrayList<ChatMessage>>();
 		this.gui = gui;
 	}
 

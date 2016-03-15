@@ -74,7 +74,7 @@ public class ClientConnection implements Runnable {
 
     public void run(){
         try {
-            CommandMessage cm = new CommandMessage(username, Commands.GET_CLIENTS_ONLINE);
+            CommandMessage cm = new CommandMessage(username, Commands.CONNECT);
             oos.writeObject(cm);
             oos.flush();
             Message message = (Message) ois.readObject();
