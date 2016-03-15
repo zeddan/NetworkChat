@@ -1,5 +1,5 @@
 package message;
-
+import client.Group;
 import java.io.Serializable;
 
 import client.Group;

@@ -7,22 +7,26 @@ import client.Group;
  * @author KEJ
  *
  */
-public class CommandMessage extends Message {
-	
+public class CommandMessage {
+
+    private String sender;
 	private int command;
 	
 	/**
 	 * Constructor
-	 * @param sender
-	 * @param recipients
-	 * @param command, the command to be done.
+	 * @param sender who sent the commando
+	 * @param command the command to be done.
 	 */
-	public CommandMessage(String sender, Group group, int command){
-		super(sender, group);
+	public CommandMessage(String sender, int command){
+        this.sender = sender;
 		this.command = command;
 	}
 	
 	public int getCommand(){
 		return command;
 	}
+
+    public String getSender() {
+        return sender;
+    }
 }

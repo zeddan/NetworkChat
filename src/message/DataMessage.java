@@ -1,4 +1,5 @@
 package message;
+import client.Group;
 
 import client.Group;
 

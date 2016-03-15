@@ -9,11 +9,14 @@ import server.User;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.swing.JFileChooser;
 
 /**
  * @author zeddan
@@ -35,15 +38,26 @@ public class ClientGUI extends JPanel {
 
 	private JTextArea taUserList;
     private JTextArea taChatWindow;
+    private JFileChooser chooser = new JFileChooser();
+    private FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "JPG & PNG Images", "jpg", "png");
+    
+    private JPanel pnlLeftGroups;
 
     private MessageListener listener;
-    private String username;
+    private String userName ="Jens"; //Töm mig
+    private Group selectedGroup;
+    private Icon selectedImage;
     
-    private ArrayList<Group> groups;
+    private ArrayList<Group> groupList;
+    private ArrayList<JLabel> groupLabels;
+    private ArrayList<String> onlineClients;
 
 	public ClientGUI(MessageListener listener) {
         this.listener = listener;
-        groups = new ArrayList<Group>();
+        groupList = new ArrayList<Group>();
+        groupLabels = new ArrayList<JLabel>();
+        onlineClients = new ArrayList<String>();
         
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
@@ -65,12 +79,14 @@ public class ClientGUI extends JPanel {
         JPanel pnlLeft = pnlLeft();
         JLabel lblGroupList = lblGroupList();
         JLabel lblPrivateList = lblPrivateList();
-        JPanel pnlLeftGroups = pnlLeftGroups();
+        pnlLeftGroups = pnlLeftGroups();
         JPanel pnlLeftPrivate = pnlLeftPrivate();
         JLabel lblGroupCreate = lblGroupCreate();
         JLabel lblPrivateCreate = lblPrivateCreate();
+        
         pnlLeftGroups.add(lblGroupList);
         pnlLeftGroups.add(lblGroupCreate);
+        
         pnlLeftPrivate.add(lblPrivateList);
         pnlLeftPrivate.add(lblPrivateCreate);
         pnlLeft.add(pnlLeftGroups);
@@ -141,7 +157,7 @@ public class ClientGUI extends JPanel {
         pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
         pnlRight.setBackground(new Color(56, 56, 56));
         return pnlRight;
-    }
+    } 
 
     private JLabel lblPrivateCreate() {
         final JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
@@ -171,6 +187,44 @@ public class ClientGUI extends JPanel {
         });
         return lblPrivateCreate;
     }
+    private JLabel lblNewGroup(String name){
+    	JLabel lbl = new JLabel(name);
+    	lbl.setForeground(new Color(145,145,145));
+    	lbl.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				setSelectedGroup(lbl.getText());
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+                lbl.setForeground(new Color(250,250,250));
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lbl.setForeground(new Color(145,145,145));
+			}
+    		
+    	});
+    	return lbl;
+    }
+    
+   
 
     private JLabel lblGroupCreate() {
         final JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
@@ -186,7 +240,6 @@ public class ClientGUI extends JPanel {
                     users.put("user"+i, new UserMock("user"+i));
                 } // mock end
                 ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-                String s = "";
                 String[] recipients = new String[selectedUsers.size()];
                
                 for(int i = 0; i < selectedUsers.size(); i++){
@@ -195,15 +248,13 @@ public class ClientGUI extends JPanel {
                 
                 do{
                 	groupName = JOptionPane.showInputDialog("Enter group name");
-                	for(int i = 0; i < groups.size(); i++){
-                		groupNameUsed = groups.get(i).isEqualTo(groupName);
+                	for(int i = 0; i < groupList.size(); i++){
+                		groupNameUsed = groupList.get(i).isEqualTo(groupName);
                 	}
                 }while(groupNameUsed);
-                 		
-               groups.add(new Group(recipients, groupName));
                 
-                System.out.println();
-                JOptionPane.showMessageDialog(null, s);
+                addGroup(new Group(recipients, groupName));                
+                JOptionPane.showMessageDialog(null, "Group " +  groupName + " created");
             }
 
             @Override
@@ -275,15 +326,11 @@ public class ClientGUI extends JPanel {
 
             @Override
             public void keyPressed(KeyEvent e) {
-//                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//                        ChatMessage message = new ChatMessage(
-//                                username,
-//                                //recipients,
-//                                tfChatWrite.getText(),
-//                                //icon
-//                                )
-//                        listener.update(new ChatMessage());
-//                }
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        ChatMessage message = new ChatMessage(userName, selectedGroup, tfChatWrite.getText(), selectedImage);
+                        listener.update(message);
+                        selectedImage = null;
+                }
             }
 
             @Override
@@ -298,7 +345,16 @@ public class ClientGUI extends JPanel {
         btnImageChooser.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // open file chooser
+               try {
+            	chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(null);
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                 selectedImage = new ImageIcon(chooser.getSelectedFile().getAbsolutePath());
+                }
+               } catch (Exception e1) {
+            	   e1.printStackTrace();
+               }
+                System.out.println(chooser.getSelectedFile().getAbsolutePath());
             }
 
             @Override
@@ -336,14 +392,32 @@ public class ClientGUI extends JPanel {
         taChatWindow.append(str +"\n");
     }
 
-    public void updateOnlineClients(String[] onlineClients) {
-        for(String clients : onlineClients) {
+    public void updateOnlineClients(String[] clientList) {
+        for(String clients : clientList) {
+            onlineClients.add(clients);
             taUserList.append(clients);
         }
     }
+    
+    public void setSelectedGroup(String groupName) {
+    	for(Group group : groupList) {
+    		if(group.getGroupName().equals(groupName)) {
+    			selectedGroup = group;
+    		}
+    	}
+    	System.out.println(selectedGroup.getGroupName());
+    }
+    
+    public void addGroup(Group group) {
+    	JLabel label = lblNewGroup(group.getGroupName());
+    	groupList.add(group);
+    	groupLabels.add(label);
+    	pnlLeftGroups.add(label);
+    	pnlLeftGroups.updateUI();
+    }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public static void main(String[] args) {
