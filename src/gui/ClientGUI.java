@@ -35,14 +35,14 @@ public class ClientGUI extends JPanel {
 
 	private JTextArea taUserList;
     private JTextArea taChatWindow;
-    
-    
+
+
     private JPanel pnlLeftGroups;
 
     private MessageListener listener;
     private String username;
     private Group selectedGroup;
-    
+
     private ArrayList<Group> groupList;
     private ArrayList<JLabel> groupLabels;
 
@@ -50,7 +50,7 @@ public class ClientGUI extends JPanel {
         this.listener = listener;
         groupList = new ArrayList<Group>();
         groupLabels = new ArrayList<JLabel>();
-        
+
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -75,10 +75,10 @@ public class ClientGUI extends JPanel {
         JPanel pnlLeftPrivate = pnlLeftPrivate();
         JLabel lblGroupCreate = lblGroupCreate();
         JLabel lblPrivateCreate = lblPrivateCreate();
-        
+
         pnlLeftGroups.add(lblGroupList);
         pnlLeftGroups.add(lblGroupCreate);
-        
+
         pnlLeftPrivate.add(lblPrivateList);
         pnlLeftPrivate.add(lblPrivateCreate);
         pnlLeft.add(pnlLeftGroups);
@@ -149,7 +149,7 @@ public class ClientGUI extends JPanel {
         pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
         pnlRight.setBackground(new Color(56, 56, 56));
         return pnlRight;
-    } 
+    }
 
     private JLabel lblPrivateCreate() {
         final JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
@@ -180,7 +180,7 @@ public class ClientGUI extends JPanel {
         return lblPrivateCreate;
     }
     private JLabel lblNewGroup(String name){
-    	JLabel lbl = new JLabel(name);
+    	final JLabel lbl = new JLabel(name);
     	lbl.setForeground(new Color(145,145,145));
     	lbl.addMouseListener(new MouseListener(){
 
@@ -192,31 +192,31 @@ public class ClientGUI extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
                 lbl.setForeground(new Color(250,250,250));
-				
+
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
 				lbl.setForeground(new Color(145,145,145));
 			}
-    		
+
     	});
     	return lbl;
     }
-    
-   
+
+
 
     private JLabel lblGroupCreate() {
         final JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
@@ -233,19 +233,19 @@ public class ClientGUI extends JPanel {
                 } // mock end
                 ArrayList<User> selectedUsers = NewGroupDialog.display(users);
                 String[] recipients = new String[selectedUsers.size()];
-               
+
                 for(int i = 0; i < selectedUsers.size(); i++){
                 	recipients[i] = selectedUsers.get(i).getUserName();
                 }
-                
+
                 do{
                 	groupName = JOptionPane.showInputDialog("Enter group name");
                 	for(int i = 0; i < groupList.size(); i++){
                 		groupNameUsed = groupList.get(i).isEqualTo(groupName);
                 	}
                 }while(groupNameUsed);
-                
-                addGroup(new Group(recipients, groupName));                
+
+                addGroup(new Group(recipients, groupName));
                 JOptionPane.showMessageDialog(null, "Group " +  groupName + " created");
             }
 
@@ -384,7 +384,7 @@ public class ClientGUI extends JPanel {
             taUserList.append(clients);
         }
     }
-    
+
     public void setSelectedGroup(String groupName) {
     	for(Group group : groupList) {
     		if(group.getGroupName().equals(groupName)) {
@@ -393,7 +393,7 @@ public class ClientGUI extends JPanel {
     	}
     	System.out.println(selectedGroup.getGroupName());
     }
-    
+
     public void addGroup(Group group) {
     	JLabel label = lblNewGroup(group.getGroupName());
     	groupList.add(group);
