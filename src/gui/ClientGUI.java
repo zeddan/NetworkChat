@@ -35,15 +35,20 @@ public class ClientGUI extends JPanel {
 
 	private JTextArea taUserList;
     private JTextArea taChatWindow;
+    
+    
+    private JPanel pnlLeftGroups;
 
     private MessageListener listener;
     private String username;
     
     private ArrayList<Group> groups;
+    private ArrayList<JLabel> groupLabels;
 
 	public ClientGUI(MessageListener listener) {
         this.listener = listener;
         groups = new ArrayList<Group>();
+        groupLabels = new ArrayList<JLabel>();
         
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
@@ -65,12 +70,14 @@ public class ClientGUI extends JPanel {
         JPanel pnlLeft = pnlLeft();
         JLabel lblGroupList = lblGroupList();
         JLabel lblPrivateList = lblPrivateList();
-        JPanel pnlLeftGroups = pnlLeftGroups();
+        pnlLeftGroups = pnlLeftGroups();
         JPanel pnlLeftPrivate = pnlLeftPrivate();
         JLabel lblGroupCreate = lblGroupCreate();
         JLabel lblPrivateCreate = lblPrivateCreate();
+        
         pnlLeftGroups.add(lblGroupList);
         pnlLeftGroups.add(lblGroupCreate);
+        
         pnlLeftPrivate.add(lblPrivateList);
         pnlLeftPrivate.add(lblPrivateCreate);
         pnlLeft.add(pnlLeftGroups);
@@ -141,7 +148,7 @@ public class ClientGUI extends JPanel {
         pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
         pnlRight.setBackground(new Color(56, 56, 56));
         return pnlRight;
-    }
+    } 
 
     private JLabel lblPrivateCreate() {
         final JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
@@ -171,6 +178,51 @@ public class ClientGUI extends JPanel {
         });
         return lblPrivateCreate;
     }
+    private JLabel lblNewGroup(String name){
+    	JLabel lbl = new JLabel(name);
+    	lbl.setForeground(new Color(145,145,145));
+    	lbl.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("Wazzzuuup");
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+                lbl.setForeground(new Color(250,250,250));
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				lbl.setForeground(new Color(145,145,145));
+			}
+    		
+    	});
+    	return lbl;
+    }
+    
+    public void addGroup(Group group) {
+
+    	JLabel label = lblNewGroup(group.getGroupName());
+    	groups.add(group);
+    	groupLabels.add(label);
+    	pnlLeftGroups.add(label);
+    	pnlLeftGroups.updateUI();
+    }
 
     private JLabel lblGroupCreate() {
         final JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
@@ -186,7 +238,6 @@ public class ClientGUI extends JPanel {
                     users.put("user"+i, new UserMock("user"+i));
                 } // mock end
                 ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-                String s = "";
                 String[] recipients = new String[selectedUsers.size()];
                
                 for(int i = 0; i < selectedUsers.size(); i++){
@@ -199,11 +250,11 @@ public class ClientGUI extends JPanel {
                 		groupNameUsed = groups.get(i).isEqualTo(groupName);
                 	}
                 }while(groupNameUsed);
-                 		
-               groups.add(new Group(recipients, groupName));
+                
+                addGroup(new Group(recipients, groupName));
                 
                 System.out.println();
-                JOptionPane.showMessageDialog(null, s);
+                JOptionPane.showMessageDialog(null, "Group " +  groupName + " created");
             }
 
             @Override
@@ -238,6 +289,44 @@ public class ClientGUI extends JPanel {
         pnlLeftGroups.setLayout(new BoxLayout(pnlLeftGroups, BoxLayout.Y_AXIS));
         pnlLeftGroups.setPreferredSize(pnlLeftGroupsSize);
         pnlLeftGroups.setOpaque(false);
+        
+//        pnlLeftGroups.addMouseListener(new MouseListener(){
+//
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				for(JLabel label : groupLabels){
+//					if(e.getSource() == label.getFocusListeners()){
+//						System.out.println("hest");
+//					}
+//				}
+//				
+//			}
+//
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//        	
+//        });
         return pnlLeftGroups;
     }
 
