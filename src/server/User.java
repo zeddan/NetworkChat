@@ -34,9 +34,9 @@ public class User implements Runnable {
 
 	@Override
 	public void run() {
-		try { // Funkar det med input f�re output?
-			inputStream = new ObjectInputStream(socket.getInputStream());
+		try {
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
+			inputStream = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

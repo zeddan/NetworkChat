@@ -41,6 +41,7 @@ public class Server extends Thread {
 		while(!Thread.interrupted()) {
 			try {
 				socket = serverSocket.accept();
+				System.out.println("Client connected: " + socket.getInetAddress());
 				threadPool.execute(new User(controller, socket));
 			} catch (IOException e) {
 				e.printStackTrace();
