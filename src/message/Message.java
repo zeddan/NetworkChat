@@ -1,5 +1,5 @@
 package message;
-
+import client.Group;
 import java.io.Serializable;
 
 public class Message implements Serializable {
@@ -16,7 +16,7 @@ public class Message implements Serializable {
 	 */
 	public Message(String sender, Group group){
 		this.sender = sender;
-		this.group = recipients;
+		this.group = group;
 	}
 	
 	/**
