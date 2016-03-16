@@ -39,15 +39,7 @@ public class UserPanel extends JPanel{
 		taUserList.append(client + "\n");
 	}
 
-	/**
-	 * 
-	 * @param clients for adding several clients
-	 */
-	public void appendUserPanel(String[] clients) {
-		for(String client: clients) {
-			taUserList.append(client + "\n");
-		}
-	}
+
 
 	private JScrollPane scrollableUserList() {
 		taUserList = new JTextArea();
