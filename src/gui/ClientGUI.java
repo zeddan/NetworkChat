@@ -46,7 +46,7 @@ public class ClientGUI extends JPanel {
 
 	private MessageListener listener;
 	private String username;
-	private Group selectedGroup =null;
+	private Group selectedGroup;
 	private Icon selectedImage;
 
 	private ArrayList<Group> groupList;
@@ -59,6 +59,8 @@ public class ClientGUI extends JPanel {
 		groupList = new ArrayList<Group>();
 		groupLabels = new ArrayList<JLabel>();
 		onlineClients = new ArrayList<String>();
+		
+		selectedGroup = all;
 		
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
@@ -431,8 +433,12 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void addToGroupAll(String[] clientList) {
-		groupList.set(0, new Group(clientList, "All"));
-		//addGroup(all);
+		Group tempGroup = new Group(clientList, "All");
+		
+		if(selectedGroup.getGroupName().equals("All"))
+		selectedGroup = tempGroup;
+		
+		groupList.set(0, tempGroup);
 	}
 
 	public synchronized void addGroup(Group inGroup) {	
