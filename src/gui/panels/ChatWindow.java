@@ -29,7 +29,7 @@ public class ChatWindow extends JPanel {
 		chatWindow.setAutoscrolls(true);
 		chatWindow.setEditable(false);
 		chatWindow.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		JScrollPane scroll = new JScrollPane(chatWindow, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scroll = new JScrollPane(chatWindow, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setViewportView(chatWindow);
 		this.add(scroll, BorderLayout.CENTER);
 	}
