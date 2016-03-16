@@ -34,8 +34,8 @@ public class ClientConnection implements Runnable {
 	public ClientConnection(String address, int port) {
 		try {
             socket = new Socket(address,port);
-			oos = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-			ois = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +59,7 @@ public class ClientConnection implements Runnable {
 		try {
 			oos.writeObject(message);
 			oos.flush();
+			System.out.println("Message sent!");
 		} catch (IOException e) {
 			System.out.println("Message could not be sent!");
 		}
