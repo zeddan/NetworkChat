@@ -72,30 +72,33 @@ public class Controller {
 			if(user != null) {
 				user.send(message);
 			} else {
-				//TODO add to que
 				addToMessageQueue(list[i], message);
 			}
 		}
 	}
-	
+
 	public void checkMessageQueue(User user) {
 		ArrayList<ChatMessage> list = messageQueue.get(user.getUserName());
+		System.out.println("Checking message queue");
 		if(list != null) {
 			for(int i = 0; i < list.size(); i++) {
 				ChatMessage message = list.get(i);
+				System.out.println("Found queued message");
 				user.send(message);
+				list.remove(i);
+				if(list.isEmpty()) {
+					System.out.println("Removing Arraylist " + user.getUserName());
+					messageQueue.remove(user);
+				}
 			}
 		}
-		/**
-		if(list.isEmpty()) {
-			messageQueue.remove(user.getUserName());
-		}
-		**/
 	}
 
 	private void addToMessageQueue(String userName, ChatMessage message) {
 		ArrayList<ChatMessage> list = messageQueue.get(userName);
+		System.out.println("Adding to messagequeue");
 		if(list == null) {
+			System.out.println("Adding new Arraylist");
 			ArrayList<ChatMessage> newList = new ArrayList<ChatMessage>();
 			newList.add(message);
 			messageQueue.put(userName, newList);
@@ -118,11 +121,13 @@ public class Controller {
 
 	public void removeUserFromList(String userName) {
 		onlineUserTable.remove(userName);
+		System.out.println("Removed from userlist: " + userName);
 		sendUserListToAllClients();
 	}
 
 	public void addUserToList(User newUser) {
 		onlineUserTable.put(newUser.getUserName(), newUser);
+		System.out.println("Added new User: " + newUser.getUserName());
 		sendUserListToAllClients();
 	}
 	
@@ -138,17 +143,4 @@ public class Controller {
 		String dateTime = df.format(date);
 		return dateTime;
 	}
-/**
-	public String decodeMessage(Object object) {
-		String string = "";
-		if(object instanceof CommandMessage) {
-			CommandMessage cm = (CommandMessage) object;
-			int type = cm.getCommand();
-			if(type == Commands.GET_CLIENTS_ONLINE) {
-				string = cm.getSender();
-			}
-		}
-		return string;
-	}
-	**/
 }
