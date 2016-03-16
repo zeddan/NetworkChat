@@ -136,6 +136,7 @@ public class ClientGUI extends JPanel {
 	private JTextArea taUserList() {
 		JTextArea taUserList = new JTextArea();
 		taUserList.setBackground(new Color(56, 56, 56));
+		taUserList.setForeground(new Color(145,145,145));
 		
 		return taUserList;
 	}
@@ -398,6 +399,7 @@ public class ClientGUI extends JPanel {
 
 	public void updateOnlineClients(String[] clientList) {
 		addToGroupAll(clientList);
+		taUserList.setText("");
 		for(String clients : clientList) {
 			onlineClients.add(clients);
 			taUserList.append(clients + "\n");
