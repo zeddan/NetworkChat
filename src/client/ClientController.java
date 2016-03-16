@@ -24,8 +24,8 @@ public class ClientController {
 	public ClientController () {
 		connectGui = new ConnectGUI(new ConnectGUIListener());
 		clientGui = new ClientGUI(new ClientGUIListener());
-		//createConnectFrame();
-		createClientFrame();
+		createConnectFrame();
+		//createClientFrame();
 	}
 
 	public void connect(String address, int port, String username) {

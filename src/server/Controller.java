@@ -86,9 +86,11 @@ public class Controller {
 				user.send(message);
 			}
 		}
+		/**
 		if(list.isEmpty()) {
 			messageQueue.remove(user.getUserName());
 		}
+		**/
 	}
 
 	private void addToMessageQueue(String userName, ChatMessage message) {

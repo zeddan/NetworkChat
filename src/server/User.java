@@ -1,5 +1,6 @@
 package server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -84,6 +85,7 @@ public class User implements Runnable {
 		}
 		try {
 			socket.close();
+			System.out.println("Closing socket");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
