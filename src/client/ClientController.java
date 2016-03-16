@@ -32,10 +32,11 @@ public class ClientController {
         clientConnection.setListener(new ClientConnectionListener());
         clientConnection.setUsername(username);
         clientConnection.start();
+        connectFrame.dispose();
         createClientFrame(username);
 	}
 
-	public void createClientFrame(final String username) {
+	public void createClientFrame(String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
