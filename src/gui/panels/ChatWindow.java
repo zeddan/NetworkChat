@@ -11,6 +11,11 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+/**
+ * 
+ * @author simonmansson
+ * 
+ */
 public class ChatWindow extends JPanel {
 	private StyledDocument doc;
 	private JTextPane chatWindow;
@@ -29,10 +34,16 @@ public class ChatWindow extends JPanel {
 		this.add(scroll, BorderLayout.CENTER);
 	}
 	
-	public void append(String text, Icon image) {
+	
+	/**
+	 * 
+	 * @param message the chat message to append
+	 * @param image message image. doesn't matter if its null.
+	 */
+	public void append(String message, Icon image) {
 	
 		try {
-			doc.insertString(doc.getLength(), text + "\n", null);
+			doc.insertString(doc.getLength(), message + "\n", null);
 			if (image != null) {
 				StyleConstants.setIcon(imgStyle, image);
 				doc.insertString(doc.getLength(), "ignored", imgStyle);
