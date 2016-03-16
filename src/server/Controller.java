@@ -4,10 +4,16 @@ import gui.server.ServerGUI;
 import message.ChatMessage;
 import message.CommandMessage;
 import message.Commands;
+import message.DataMessage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+
+import client.Group;
 
 /**
  * Del av gruppuppgift DA343A
@@ -20,34 +26,32 @@ public class Controller {
 	private Server server;
 	private Enumeration enumeration;
 	
-	private Hashtable<String, User> userTable; // table med alla anslutna Users
+	private Hashtable<String, User> onlineUserTable; // table med alla anslutna Users
+	private Hashtable<String, ArrayList<ChatMessage>> messageQueue;
 	
 	public Controller(ServerGUI gui) {
-		userTable = new Hashtable<String, User>();
+		onlineUserTable = new Hashtable<String, User>();
+		messageQueue = new Hashtable<String, ArrayList<ChatMessage>>();
 		this.gui = gui;
 	}
-	
-	public User findUser(String userName) {
-		User user = userTable.get(userName);
+
+	public User findOnlineUser(String userName) {
+		User user = onlineUserTable.get(userName);
 		return user;
-		//TODO metoden som anropar får kolla om user är null
-		//(man kan ju göra det i den här metoden också). Om den är null är
-		//ju klienten inte tillgänglig och då får man spara ett eventuellt meddelande någonstans.
-		//TODO för att skicka: user.send(.....);
 	}
-	
-	public void sendToAllUsers(Object object) {
-		enumeration = userTable.keys();
+
+	public void sendToAllUsers(DataMessage dataMessage) {
+		enumeration = onlineUserTable.keys();
 		while(enumeration.hasMoreElements()) {
 			String userName = (String) enumeration.nextElement();
-			User user = (User) userTable.get(userName);
-			user.send(object);
+			User user = (User) onlineUserTable.get(userName);
+			user.send(dataMessage);
 		}
 	}
 	
 	public String[] getClientsOnline() {
 		ArrayList<String> list = new ArrayList<String>();
-		enumeration = userTable.keys();
+		enumeration = onlineUserTable.keys();
 		while(enumeration.hasMoreElements()) {
 			list.add((String) enumeration.nextElement());
 		}
@@ -58,8 +62,46 @@ public class Controller {
 		return usersList;
 	}
 	
-	public void processMessage(Object object) {
+	public void processChatMessage(Object object) {
 		ChatMessage message = (ChatMessage) object;
+		message.setDeliveredToServerTime(getTime());
+		Group group = message.getRecipients();
+		String[] list = group.getRecipients();
+		for(int i = 0; i < list.length; i++) {
+			User user = findOnlineUser(list[i]);
+			if(user != null) {
+				user.send(message);
+			} else {
+				//TODO add to que
+				addToMessageQueue(list[i], message);
+			}
+		}
+	}
+	
+	public void checkMessageQueue(User user) {
+		ArrayList<ChatMessage> list = messageQueue.get(user.getUserName());
+		if(list != null) {
+			for(int i = 0; i < list.size(); i++) {
+				ChatMessage message = list.get(i);
+				user.send(message);
+			}
+		}
+		/**
+		if(list.isEmpty()) {
+			messageQueue.remove(user.getUserName());
+		}
+		**/
+	}
+
+	private void addToMessageQueue(String userName, ChatMessage message) {
+		ArrayList<ChatMessage> list = messageQueue.get(userName);
+		if(list == null) {
+			ArrayList<ChatMessage> newList = new ArrayList<ChatMessage>();
+			newList.add(message);
+			messageQueue.put(userName, newList);
+		} else {
+			list.add(message);
+		}
 		
 	}
 	
@@ -75,21 +117,28 @@ public class Controller {
 	}
 
 	public void removeUserFromList(String userName) {
-		userTable.remove(userName);
+		onlineUserTable.remove(userName);
+		sendUserListToAllClients();
 	}
 
 	public void addUserToList(User newUser) {
-		userTable.put(newUser.getUserName(), newUser);
+		onlineUserTable.put(newUser.getUserName(), newUser);
+		sendUserListToAllClients();
 	}
 	
-	public void createNewMessageWithPicture() {
-		
+	public void sendUserListToAllClients() {
+		String[] list = getClientsOnline();
+		DataMessage message = new DataMessage(null, null, list);
+		sendToAllUsers(message);
 	}
 	
-	public void createNewMessageNoPicture() {
-		
+	public String getTime() {
+		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		Date date = new Date();
+		String dateTime = df.format(date);
+		return dateTime;
 	}
-	
+/**
 	public String decodeMessage(Object object) {
 		String string = "";
 		if(object instanceof CommandMessage) {
@@ -101,5 +150,5 @@ public class Controller {
 		}
 		return string;
 	}
-
+	**/
 }

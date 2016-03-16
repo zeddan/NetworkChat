@@ -1,4 +1,5 @@
 package client;
+import client.interfaces.MessageListener;
 import gui.ClientGUI;
 import gui.ConnectGUI;
 import message.*;
@@ -6,7 +7,6 @@ import message.*;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import java.awt.*;
-import java.util.LinkedList;
 
 /**
  * 
@@ -17,26 +17,22 @@ import java.util.LinkedList;
 public class ClientController {
 	private ClientGUI clientGui;
 	private ConnectGUI connectGui;
-	private String userName;
 	private JFrame connectFrame;
 	private JFrame clientFrame;
 	private ClientConnection clientConnection;
-    private String[] onlineClients;
-
 
 	public ClientController () {
-		connectGui = new ConnectGUI(this);
+		connectGui = new ConnectGUI(new ConnectGUIListener());
 		clientGui = new ClientGUI(new ClientGUIListener());
-		//createConnectFrame();
-		createClientFrame();
+		createConnectFrame();
+		//createClientFrame();
 	}
 
-	public void connect(String address, int port, String userName) {
-		this.userName = userName;
-		clientConnection = new ClientConnection(address, port, new ClientConnectionListener());
-		clientConnection.startListener();
-        onlineClients = clientConnection.getOnlineClients();
-        clientGui.updateOnlineClients(onlineClients);
+	public void connect(String address, int port, String username) {
+		clientConnection = new ClientConnection(address, port);
+        clientConnection.setListener(new ClientConnectionListener());
+        clientConnection.setUsername(username);
+        clientConnection.start();
         createClientFrame();
 	}
 
@@ -72,6 +68,13 @@ public class ClientController {
 		});
 	}
 
+    private class ConnectGUIListener implements ConnectGUI.ConnectGUIListener {
+        @Override
+        public void onConnect(String address, int port, String username) {
+            connect(address, port, username);
+        }
+    }
+
     private class ClientGUIListener implements MessageListener {
         @Override
         public void update(Message message) {
@@ -82,9 +85,10 @@ public class ClientController {
 	private class ClientConnectionListener implements MessageListener {
         @Override
 		public void update(Message message) {
-            if (message instanceof DataMessage)
-                clientGui.newDataMessage((DataMessage) message);
-            else if (message instanceof ChatMessage)
+            if (message instanceof DataMessage) {
+                String[] onlineClients = ((DataMessage) message).getData();
+                clientGui.updateOnlineClients(onlineClients);
+            } else if (message instanceof ChatMessage)
                 clientGui.newChatMessage((ChatMessage) message);
 		}
 	}

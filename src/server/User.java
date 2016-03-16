@@ -1,5 +1,6 @@
 package server;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,7 +20,7 @@ public class User implements Runnable {
 	
 	private String userName;
 	
-	private Controller controller; // User fick en egen referens till Controllern
+	private Controller controller;
 	
 	private boolean active = true;
 	
@@ -34,9 +35,9 @@ public class User implements Runnable {
 
 	@Override
 	public void run() {
-		try { // Funkar det med input f�re output?
-			inputStream = new ObjectInputStream(socket.getInputStream());
+		try {
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
+			inputStream = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,15 +48,17 @@ public class User implements Runnable {
 				if(object instanceof CommandMessage) {
 					CommandMessage cm = (CommandMessage) object;
 					int type = cm.getCommand();
-					if(type == Commands.GET_CLIENTS_ONLINE) {
+					if(type == Commands.CONNECT) {
 						userName = cm.getSender();
-						
+						controller.addUserToList(this);
 						DataMessage dataMessage = new DataMessage(null, null, controller.getClientsOnline());
+						controller.checkMessageQueue(this);
 					}
 				} else if(object instanceof ChatMessage) {
-					controller.processMessage(object);
+					
+					controller.processChatMessage(object);
 				}
-				String string = controller.decodeMessage(object);
+				//String string = controller.decodeMessage(object);
 				//controller.addUserToList(newUser);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -82,6 +85,7 @@ public class User implements Runnable {
 		}
 		try {
 			socket.close();
+			System.out.println("Closing socket");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

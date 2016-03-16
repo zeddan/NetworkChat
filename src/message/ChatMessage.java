@@ -1,8 +1,10 @@
 package message;
 
 import java.io.Serializable;
-
+import client.Group;
 import javax.swing.Icon;
+
+import client.Group;
 
 // Skall den kompletteras med hasPicture()?
 /**
