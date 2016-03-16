@@ -48,4 +48,8 @@ public class ChatMessage extends Message {
 		return picture != null;
 	}
 	
+	public String toString(){
+		return "[" + super.getSender() + "]" + "<" + super.getDeliveredToServerTime() + "> " + chatMessage; 
+	}
+	
 }
