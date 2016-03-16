@@ -4,6 +4,7 @@ import client.Group;
 import client.interfaces.MessageListener;
 import gui.button.CustomButton;
 import gui.panels.ChatWindow;
+import gui.panels.UserPanel;
 import message.*;
 import server.User;
 
@@ -37,7 +38,6 @@ public class ClientGUI extends JPanel {
 	private Dimension pnlLeftPrivateSize = new Dimension(PNL_LEFT_WIDTH, PNL_LEFT_HEIGHT/2);
 	private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
-	private JTextArea taUserList;
 	private JFileChooser chooser = new JFileChooser();
 	private FileNameExtensionFilter filter = new FileNameExtensionFilter(
 			"JPG & PNG Images", "jpg", "png");
@@ -54,6 +54,7 @@ public class ClientGUI extends JPanel {
 	private ArrayList<String> onlineClients;
 	private Group all = new Group(null, "All");
 	private ChatWindow chatWindow; 
+	private UserPanel userPanel;
 
 	public ClientGUI(MessageListener listener) {
 		this.listener = listener;
@@ -96,16 +97,12 @@ public class ClientGUI extends JPanel {
 		pnlLeft.add(pnlLeftPrivate);
 
 		// RIGHT PANEL
-		JPanel pnlRight = pnlRight();
-		JLabel lblChatUsers = lblChatUsers();
-		taUserList = taUserList();
-		JScrollPane spUserList = spUserList(taUserList);
-		pnlRight.add(lblChatUsers);
-		pnlRight.add(spUserList);
-
+		userPanel = new UserPanel(pnlRightSize);
+		
+		//ASSEMBLE
 		add(pnlLeft, BorderLayout.WEST);
 		add(pnlMain, BorderLayout.CENTER);
-		add(pnlRight, BorderLayout.EAST);
+		add(userPanel, BorderLayout.EAST);
 		
 		//groupsakngang
 		
@@ -127,37 +124,6 @@ public class ClientGUI extends JPanel {
 		pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
 		return pnlMain;
 	}
-
-
-	private JTextArea taUserList() {
-		JTextArea taUserList = new JTextArea();
-		taUserList.setBackground(new Color(56, 56, 56));
-		taUserList.setForeground(new Color(145,145,145));
-
-		return taUserList;
-	}
-
-	private JScrollPane spUserList(JTextArea taUserList) {
-		JScrollPane spUserList = new JScrollPane(taUserList);
-		spUserList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-		spUserList.setBorder(null);
-		return spUserList;
-	}
-
-	private JLabel lblChatUsers() {
-		JLabel lblChatUsers = new JLabel("Users", SwingConstants.CENTER);
-		lblChatUsers.setForeground(Color.WHITE);
-		return lblChatUsers;
-	}
-
-	private JPanel pnlRight() {
-		JPanel pnlRight = new JPanel();
-		pnlRight.setPreferredSize(pnlRightSize);
-		pnlRight.setBorder(new EmptyBorder(15,15,10,0));
-		pnlRight.setLayout(new BoxLayout(pnlRight, BoxLayout.Y_AXIS));
-		pnlRight.setBackground(new Color(56, 56, 56));
-		return pnlRight;
-	} 
 
 	private JLabel lblPrivateCreate() {
 		final JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
@@ -397,11 +363,11 @@ public class ClientGUI extends JPanel {
 
 	public void updateOnlineClients(String[] clientList) {
 		addToGroupAll(clientList);
-		taUserList.setText("");
-		for(String clients : clientList) {
-			if(!clients.equals(username)) {
-				onlineClients.add(clients);
-				taUserList.append(clients + "\n");
+		userPanel.clearUserPanel();
+		for(String client : clientList) {
+			if(!client.equals(username)) {
+				onlineClients.add(client);
+				userPanel.appendUserPanel(client);
 			}
 		}
 
