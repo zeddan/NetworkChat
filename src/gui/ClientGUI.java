@@ -58,8 +58,8 @@ public class ClientGUI extends JPanel {
 		groupList = new ArrayList<Group>();
 		groupLabels = new ArrayList<JLabel>();
 		onlineClients = new ArrayList<String>();
-//		Group all = new Group(null, "All");
-//		groupList.add(all);
+		Group all = new Group(null, "All");
+		groupList.add(all);
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
@@ -414,6 +414,7 @@ public class ClientGUI extends JPanel {
 	public void addToGroupAll(String[] clientList) {
 		Group all = new Group(clientList, "All");
 		groupList.set(0, all);
+		addGroup(all);
 	}
 
 	public void addGroup(Group group) {

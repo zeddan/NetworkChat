@@ -96,6 +96,7 @@ public class ServerGUI extends JPanel implements ActionListener{
 	/**
 	 * Listener. Listen for button click. Starts the server. 
 	 */
+    
 	public void actionPerformed(ActionEvent ae) {
 		if(!started){
 			controller.startServer(Integer.parseInt(tfPort.getText()));

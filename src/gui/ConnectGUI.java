@@ -24,7 +24,7 @@ public class ConnectGUI extends JPanel {
     private JLabel lblAddress = new JLabel("Address");
     private JLabel lblPort = new JLabel("Port");
     private JTextField tfUsername = new JTextField();
-    private JTextField tfAddress = new JTextField();
+    private JTextField tfAddress = new JTextField("localhost");
     private JTextField tfPort = new JTextField("40023");
     private JButton btnConnect = new JButton("Connect");
     private Dimension componentSize = new Dimension(200, 25);
