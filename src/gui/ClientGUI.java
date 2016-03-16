@@ -3,6 +3,7 @@ package gui;
 import client.Group;
 import client.interfaces.MessageListener;
 import gui.button.CustomButton;
+import gui.panels.ChatWindow;
 import message.*;
 import server.User;
 
@@ -37,7 +38,6 @@ public class ClientGUI extends JPanel {
 	private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
 	private JTextArea taUserList;
-	private JTextPane tpChatWindow;
 	private JFileChooser chooser = new JFileChooser();
 	private FileNameExtensionFilter filter = new FileNameExtensionFilter(
 			"JPG & PNG Images", "jpg", "png");
@@ -53,6 +53,7 @@ public class ClientGUI extends JPanel {
 	private ArrayList<JLabel> groupLabels;
 	private ArrayList<String> onlineClients;
 	private Group all = new Group(null, "All");
+	private ChatWindow chatWindow; 
 
 	public ClientGUI(MessageListener listener) {
 		this.listener = listener;
@@ -67,12 +68,11 @@ public class ClientGUI extends JPanel {
 		setBackground(Color.WHITE);
 
 		// MAIN PANEL
+		chatWindow = new ChatWindow();
 		JPanel pnlMain = pnlMain();
 		CustomButton btnImageChooser = btnImageChooser();
 		JTextField tfChatWrite = tfChatWrite();
-		tpChatWindow = tpChatWindow();
-		JScrollPane spChatWindow = spChatWindow(tpChatWindow);
-		pnlMain.add(spChatWindow, BorderLayout.CENTER);
+		pnlMain.add(chatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
 		pnlChatWrite.add(btnImageChooser, BorderLayout.EAST);
@@ -128,19 +128,6 @@ public class ClientGUI extends JPanel {
 		return pnlMain;
 	}
 
-	private JScrollPane spChatWindow(JTextPane tpChatWindow) {
-		JScrollPane spChatWindow = new JScrollPane (tpChatWindow);
-		spChatWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		spChatWindow.setBorder(null);
-		return spChatWindow;
-	}
-
-	private JTextPane tpChatWindow() {
-		JTextPane tpChatWindow = new JTextPane();
-		tpChatWindow.setEditable(false);
-		tpChatWindow.setBorder(null);
-		return tpChatWindow;
-	}
 
 	private JTextArea taUserList() {
 		JTextArea taUserList = new JTextArea();
@@ -399,11 +386,8 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void newChatMessage(ChatMessage message) {
-		tpChatWindow.setText(tpChatWindow.getText() + message.toString() +"\n");
+		chatWindow.append(message.toString(), message.getPicture());
 		addGroup(message.getGroup());
-		if(message.hasPicture()) {
-			tpChatWindow.insertIcon(message.getPicture());
-		}
 	}
 
 	public void newDataMessage(DataMessage message) {
