@@ -49,7 +49,7 @@ public class ChatMessage extends Message {
 	}
 	
 	public String toString(){
-		return "[" + super.getSender() + "]" + "<" + super.getDeliveredToServerTime() + "> " + chatMessage; 
+		return "[" + super.getSender() + "]" + "(" + super.getGroup().getGroupName()+ ")" + "<" + super.getDeliveredToServerTime() + "> " + chatMessage; 
 	}
 	
 }

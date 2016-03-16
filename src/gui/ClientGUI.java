@@ -246,15 +246,16 @@ public class ClientGUI extends JPanel {
 				String groupName;
 				//  mock start
 				Map<String, User> users = new Hashtable<>();
-				for (int i=0; i < 22; i++) {
-					users.put("user"+i, new UserMock("user"+i));
+				for (int i=0; i < onlineClients.size(); i++) {
+					users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
 				} // mock end
 				ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-				String[] recipients = new String[selectedUsers.size()];
+				String[] recipients = new String[selectedUsers.size() + 1];
 
 				for(int i = 0; i < selectedUsers.size(); i++){
 					recipients[i] = selectedUsers.get(i).getUserName();
 				}
+				recipients[selectedUsers.size()] = username;
 
 				do{
 					groupName = JOptionPane.showInputDialog("Enter group name");
@@ -396,6 +397,7 @@ public class ClientGUI extends JPanel {
 
 	public void newChatMessage(ChatMessage message) {
 		taChatWindow.append(message.toString() +"\n");
+		addGroup(message.getGroup());
 	}
 
 	public void newDataMessage(DataMessage message) {
