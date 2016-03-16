@@ -52,6 +52,7 @@ public class ClientGUI extends JPanel {
 	private ArrayList<Group> groupList;
 	private ArrayList<JLabel> groupLabels;
 	private ArrayList<String> onlineClients;
+	private Group all = new Group(null, "All");
 
 	public ClientGUI(MessageListener listener) {
 		this.listener = listener;
@@ -105,7 +106,7 @@ public class ClientGUI extends JPanel {
 		add(pnlRight, BorderLayout.EAST);
 		
 		//groupsakngang
-		Group all = new Group(null, "All");
+		
 		groupList.add(all);
 		JLabel label = lblNewGroup(all.getGroupName());
 		groupLabels.add(label);
@@ -430,9 +431,9 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void addToGroupAll(String[] clientList) {
-		Group all = new Group(clientList, "All");
+		all = new Group(clientList, "All");
 		groupList.set(0, all);
-		addGroup(all);
+		//addGroup(all);
 	}
 
 	public synchronized void addGroup(Group inGroup) {	
