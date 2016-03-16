@@ -45,7 +45,7 @@ public class ClientGUI extends JPanel {
 	private JPanel pnlLeftGroups;
 
 	private MessageListener listener;
-	private String userName;
+	private String username;
 	private Group selectedGroup;
 	private Icon selectedImage;
 
@@ -60,6 +60,7 @@ public class ClientGUI extends JPanel {
 		onlineClients = new ArrayList<String>();
 		Group all = new Group(null, "All");
 		groupList.add(all);
+		selectedGroup = all;
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
@@ -135,6 +136,8 @@ public class ClientGUI extends JPanel {
 	private JTextArea taUserList() {
 		JTextArea taUserList = new JTextArea();
 		taUserList.setBackground(new Color(56, 56, 56));
+		taUserList.setForeground(new Color(145,145,145));
+
 		return taUserList;
 	}
 
@@ -328,9 +331,10 @@ public class ClientGUI extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					ChatMessage message = new ChatMessage(userName, selectedGroup, tfChatWrite.getText(), selectedImage);
+					ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage);
 					listener.update(message);
 					selectedImage = null;
+					tfChatWrite.setText("");
 				}
 			}
 
@@ -382,7 +386,7 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void newChatMessage(ChatMessage message) {
-		taChatWindow.setText(message.toString());
+		taChatWindow.append(message.toString() +"\n");
 	}
 
 	public void newDataMessage(DataMessage message) {
@@ -395,9 +399,12 @@ public class ClientGUI extends JPanel {
 
 	public void updateOnlineClients(String[] clientList) {
 		addToGroupAll(clientList);
+		taUserList.setText("");
 		for(String clients : clientList) {
-			onlineClients.add(clients);
-			taUserList.append(clients);
+			if(!clients.equals(username)) {
+				onlineClients.add(clients);
+				taUserList.append(clients + "\n");
+			}
 		}
 
 	}
@@ -418,15 +425,17 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void addGroup(Group group) {
+
 		JLabel label = lblNewGroup(group.getGroupName());
 		groupList.add(group);
+
 		groupLabels.add(label);
 		pnlLeftGroups.add(label);
 		pnlLeftGroups.updateUI();
 	}
 
 	public void setUsername(String username) {
-		this.userName = username;
+		this.username = username;
 	}
 
 	public static void main(String[] args) {

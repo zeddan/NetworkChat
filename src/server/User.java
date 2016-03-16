@@ -67,7 +67,6 @@ public class User implements Runnable {
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 	public void send(Object object) {
