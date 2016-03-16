@@ -364,10 +364,10 @@ public class ClientGUI extends JPanel {
 	public void updateOnlineClients(String[] clientList) {
 		addToGroupAll(clientList);
 		userPanel.clearUserPanel();
+		userPanel.appendUserPanel(clientList);
 		for(String client : clientList) {
 			if(!client.equals(username)) {
 				onlineClients.add(client);
-				userPanel.appendUserPanel(client);
 			}
 		}
 
