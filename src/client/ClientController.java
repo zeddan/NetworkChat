@@ -25,7 +25,6 @@ public class ClientController {
 		connectGui = new ConnectGUI(new ConnectGUIListener());
 		clientGui = new ClientGUI(new ClientGUIListener());
 		createConnectFrame();
-		//createClientFrame();
 	}
 
 	public void connect(String address, int port, String username) {
@@ -33,16 +32,17 @@ public class ClientController {
         clientConnection.setListener(new ClientConnectionListener());
         clientConnection.setUsername(username);
         clientConnection.start();
-        createClientFrame();
+        createClientFrame(username);
 	}
 
-	public void createClientFrame() {
+	public void createClientFrame(String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				clientFrame = new JFrame("Client");
+				clientFrame = new JFrame("Client:" + username);
 				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				clientFrame.add(clientGui);
+				clientGui.setUsername(username);
 				clientFrame.pack();
 				clientFrame.setLocation(
 						dim.width/2-clientFrame.getSize().width/2,
