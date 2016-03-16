@@ -60,6 +60,7 @@ public class ClientGUI extends JPanel {
 		onlineClients = new ArrayList<String>();
 		Group all = new Group(null, "All");
 		groupList.add(all);
+		selectedGroup = all;
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
@@ -135,6 +136,7 @@ public class ClientGUI extends JPanel {
 	private JTextArea taUserList() {
 		JTextArea taUserList = new JTextArea();
 		taUserList.setBackground(new Color(56, 56, 56));
+		
 		return taUserList;
 	}
 
@@ -331,6 +333,7 @@ public class ClientGUI extends JPanel {
 					ChatMessage message = new ChatMessage(userName, selectedGroup, tfChatWrite.getText(), selectedImage);
 					listener.update(message);
 					selectedImage = null;
+					tfChatWrite.setText("");
 				}
 			}
 
@@ -397,7 +400,7 @@ public class ClientGUI extends JPanel {
 		addToGroupAll(clientList);
 		for(String clients : clientList) {
 			onlineClients.add(clients);
-			taUserList.append(clients);
+			taUserList.append(clients + "\n");
 		}
 
 	}
