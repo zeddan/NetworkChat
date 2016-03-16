@@ -37,7 +37,7 @@ public class ClientGUI extends JPanel {
 	private Dimension pnlRightSize = new Dimension(PNL_RIGHT_WIDTH, PNL_RIGHT_HEIGHT);
 
 	private JTextArea taUserList;
-	private JTextArea taChatWindow;
+	private JTextPane tpChatWindow;
 	private JFileChooser chooser = new JFileChooser();
 	private FileNameExtensionFilter filter = new FileNameExtensionFilter(
 			"JPG & PNG Images", "jpg", "png");
@@ -68,8 +68,8 @@ public class ClientGUI extends JPanel {
 		JPanel pnlMain = pnlMain();
 		CustomButton btnImageChooser = btnImageChooser();
 		JTextField tfChatWrite = tfChatWrite();
-		taChatWindow = taChatWindow();
-		JScrollPane spChatWindow = spChatWindow(taChatWindow);
+		tpChatWindow = tpChatWindow();
+		JScrollPane spChatWindow = spChatWindow(tpChatWindow);
 		pnlMain.add(spChatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
@@ -126,18 +126,18 @@ public class ClientGUI extends JPanel {
 		return pnlMain;
 	}
 
-	private JScrollPane spChatWindow(JTextArea taChatWindow) {
-		JScrollPane spChatWindow = new JScrollPane (taChatWindow);
+	private JScrollPane spChatWindow(JTextPane tpChatWindow) {
+		JScrollPane spChatWindow = new JScrollPane (tpChatWindow);
 		spChatWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		spChatWindow.setBorder(null);
 		return spChatWindow;
 	}
 
-	private JTextArea taChatWindow() {
-		JTextArea taChatWindow = new JTextArea();
-		taChatWindow.setEditable(false);
-		taChatWindow.setBorder(null);
-		return taChatWindow;
+	private JTextPane tpChatWindow() {
+		JTextPane tpChatWindow = new JTextPane();
+		tpChatWindow.setEditable(false);
+		tpChatWindow.setBorder(null);
+		return tpChatWindow;
 	}
 
 	private JTextArea taUserList() {
@@ -397,17 +397,17 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void newChatMessage(ChatMessage message) {
-		taChatWindow.append(message.toString() +"\n");
+		tpChatWindow.setText(tpChatWindow.getText() + message.toString() +"\n");
 		addGroup(message.getGroup());
+		if(message.hasPicture()) {
+			tpChatWindow.insertIcon(message.getPicture());
+		}
 	}
 
 	public void newDataMessage(DataMessage message) {
 		updateOnlineClients(message.getData());
 	}
 
-	public void textToChatWindow(String str) {
-		taChatWindow.append(str +"\n");
-	}
 
 	public void updateOnlineClients(String[] clientList) {
 		addToGroupAll(clientList);
@@ -431,8 +431,7 @@ public class ClientGUI extends JPanel {
 	}
 
 	public void addToGroupAll(String[] clientList) {
-		all = new Group(clientList, "All");
-		groupList.set(0, all);
+		groupList.set(0, new Group(clientList, "All"));
 		//addGroup(all);
 	}
 
