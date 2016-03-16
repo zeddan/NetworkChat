@@ -14,7 +14,7 @@ public class UserPanel extends JPanel{
 	private JScrollPane scrollableUserList;
 	private JTextArea taUserList;
 	private JLabel lblChatUsers;
-	
+
 	public UserPanel (Dimension userPanelSize ) {
 		setPreferredSize(userPanelSize);
 		setBorder(new EmptyBorder(15,15,10,0));
@@ -26,13 +26,27 @@ public class UserPanel extends JPanel{
 		this.add(lblChatUsers);
 		this.add(scrollableUserList);
 	}
-	
+
+
 	public void clearUserPanel() {
 		taUserList.setText("");
 	}
+	/**
+	 * 
+	 * @param client for adding a single client
+	 */
 	public void appendUserPanel(String client) {
 		taUserList.append(client + "\n");
-		
+	}
+
+	/**
+	 * 
+	 * @param clients for adding several clients
+	 */
+	public void appendUserPanel(String[] clients) {
+		for(String client: clients) {
+			taUserList.append(client + "\n");
+		}
 	}
 
 	private JScrollPane scrollableUserList() {
@@ -45,7 +59,7 @@ public class UserPanel extends JPanel{
 		scrollableUserList.setBorder(null);
 		return scrollableUserList;
 	}
-	
-	
+
+
 
 }
