@@ -46,7 +46,7 @@ public class ClientGUI extends JPanel {
 
 	private MessageListener listener;
 	private String username;
-	private Group selectedGroup;
+	private Group selectedGroup =null;
 	private Icon selectedImage;
 
 	private ArrayList<Group> groupList;
@@ -58,9 +58,7 @@ public class ClientGUI extends JPanel {
 		groupList = new ArrayList<Group>();
 		groupLabels = new ArrayList<JLabel>();
 		onlineClients = new ArrayList<String>();
-		Group all = new Group(null, "All");
-		groupList.add(all);
-		selectedGroup = all;
+		
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
 		setBackground(Color.WHITE);
@@ -105,6 +103,14 @@ public class ClientGUI extends JPanel {
 		add(pnlLeft, BorderLayout.WEST);
 		add(pnlMain, BorderLayout.CENTER);
 		add(pnlRight, BorderLayout.EAST);
+		
+		//groupsakngang
+		Group all = new Group(null, "All");
+		groupList.add(all);
+		JLabel label = lblNewGroup(all.getGroupName());
+		groupLabels.add(label);
+		pnlLeftGroups.add(label);
+		pnlLeftGroups.updateUI();
 	}
 
 	private JPanel pnlChatWrite() {
@@ -331,6 +337,9 @@ public class ClientGUI extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (selectedGroup == null) {
+						selectedGroup = groupList.get(0);
+					}
 					ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage);
 					listener.update(message);
 					selectedImage = null;
@@ -424,14 +433,21 @@ public class ClientGUI extends JPanel {
 		addGroup(all);
 	}
 
-	public void addGroup(Group group) {
-
-		JLabel label = lblNewGroup(group.getGroupName());
-		groupList.add(group);
-
-		groupLabels.add(label);
-		pnlLeftGroups.add(label);
-		pnlLeftGroups.updateUI();
+	public synchronized void addGroup(Group inGroup) {	
+		boolean foundGroupName = false;
+		for(Group group : groupList) {
+			if(group.getGroupName().equals(inGroup.getGroupName()))
+				foundGroupName = true;
+		}
+		
+		if(!foundGroupName){
+			JLabel label = lblNewGroup(inGroup.getGroupName());
+			groupList.add(inGroup);
+			groupLabels.add(label);
+			pnlLeftGroups.add(label);
+			pnlLeftGroups.updateUI();
+		}
+		
 	}
 
 	public void setUsername(String username) {
