@@ -3,6 +3,7 @@ package message;
 import java.io.Serializable;
 import client.Group;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import client.Group;
 
@@ -15,6 +16,7 @@ import client.Group;
 public class ChatMessage extends Message {
 	private String chatMessage;
 	private Icon picture;
+	private String fileName;
 	
 	/**
 	 * Constructor to be used by sending client.
@@ -23,10 +25,11 @@ public class ChatMessage extends Message {
 	 * @param message. The text message to send
 	 * @param picture. The picture (Icon) to send.
 	 */
-	public ChatMessage(String from, Group group, String chatMessage, Icon picture){
+	public ChatMessage(String from, Group group, String chatMessage, Icon picture, String fileName){
 		super(from, group);
 		this.chatMessage = chatMessage;
 		this.picture = picture;
+		this.fileName = fileName;
 	}
 		
 	/**
@@ -46,6 +49,10 @@ public class ChatMessage extends Message {
 	
 	public boolean hasPicture(){
 		return picture != null;
+	}
+	
+	public String getFileName(){
+		return fileName;
 	}
 	
 	public String toString(){

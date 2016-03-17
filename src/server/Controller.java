@@ -77,6 +77,11 @@ public class Controller {
 		}
 	}
 	
+	public void logToGUI(String message){
+		gui.writeLogToGUI(message);
+	}
+	
+	
 	public String[] getClientsOnline() {
 //		requestLog.info("In getClientsOnline");
 		gui.writeLogToGUI(new SystemEntry("Vi testar detta från getClientsOnline", SystemEntryType.INFO).toString() + "\n");
@@ -152,7 +157,8 @@ public class Controller {
 
 	public void removeUserFromList(String userName) {
 		onlineUserTable.remove(userName);
-		System.out.println("Removed from userlist: " + userName);
+		//System.out.println("Removed from userlist: " + userName);
+		logToGUI(new SystemEntry(userName + " disconnected", SystemEntryType.INFO).toString() + "\n");
 		sendUserListToAllClients();
 	}
 

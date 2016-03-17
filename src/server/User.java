@@ -10,6 +10,8 @@ import message.ChatMessage;
 import message.CommandMessage;
 import message.Commands;
 import message.DataMessage;
+import server.log.SystemEntry;
+import server.log.SystemEntryType;
 
 /**
  * Del av gruppuppgift DA343A
@@ -50,8 +52,8 @@ public class User implements Runnable {
 					int type = cm.getCommand();
 					if(type == Commands.CONNECT) {
 						userName = cm.getSender();
+						controller.logToGUI(new SystemEntry(userName + " connected", SystemEntryType.INFO).toString() + "\n");
 						controller.addUserToList(this);
-						DataMessage dataMessage = new DataMessage(null, null, controller.getClientsOnline());
 						controller.checkMessageQueue(this);
 					}
 				} else if(object instanceof ChatMessage) {
@@ -70,6 +72,12 @@ public class User implements Runnable {
 	public void send(Object object) {
 		try {
 			outputStream.writeObject(object);
+			if(object instanceof ChatMessage){
+				ChatMessage cm = (ChatMessage) object;
+				controller.logToGUI(new SystemEntry("ChattMessage sent to: " +userName, SystemEntryType.INFO).toString() + "\n"
+						+ cm.getChatMessage() + "\n" +
+						cm.);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
