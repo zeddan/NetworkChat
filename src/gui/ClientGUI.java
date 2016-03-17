@@ -55,6 +55,7 @@ public class ClientGUI extends JPanel {
 	private ArrayList<Group> groupList;
 	private ArrayList<JLabel> groupLabels;
 	private ArrayList<String> onlineClients;
+	private ArrayList<Group> privateMessageList;
 	private Group all = new Group(null, "All");
 	private ChatWindow chatWindow; 
 	private UserPanel userPanel;
@@ -146,7 +147,7 @@ public class ClientGUI extends JPanel {
 		lblPrivateCreate.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				addPrivate(createGroup());
+				addPrivate();
 			}
 
 			@Override
@@ -399,15 +400,15 @@ public class ClientGUI extends JPanel {
 		}
 	}
 
-	private void addPrivate(Group inGroup) {
-		boolean foundGroupName = false;
-		for(Group group : groupList) {
-			if(group.getGroupName().equals(inGroup.getGroupName()))
-				foundGroupName = true;
+	private void addPrivate() {
+		boolean foundPMName = false;
+		String name;
+		for(Group group : privateMessageList) {
+			if(group.getGroupName().equals(name))
+				foundPMName = true;
 		}
-		if(!foundGroupName){
-			JLabel label = lblNewGroup(inGroup.getGroupName());
-			groupList.add(inGroup);
+		if(!foundPMName){
+			JLabel label = lblNewGroup(name);
 			groupLabels.add(label);
 			pnlLeftPrivate.add(label);
 			pnlLeftPrivate.updateUI();
@@ -430,11 +431,10 @@ public class ClientGUI extends JPanel {
 	}
 
 	private String[] presentRecipients() {
-		//  mock start
 		Map<String, User> users = new Hashtable<>();
 		for (int i=0; i < onlineClients.size(); i++) {
 			users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
-		} // mock end
+		}
 		ArrayList<User> selectedUsers = NewGroupDialog.display(users);
 		String[] recipients = new String[selectedUsers.size() + 1];
 
