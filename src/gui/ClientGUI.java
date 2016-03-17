@@ -50,6 +50,7 @@ public class ClientGUI extends JPanel {
 	private String username;
 	private Group selectedGroup;
 	private Icon selectedImage;
+	private String selectedImageName;
 	private JTextField tfChatWrite;
 
 	private ArrayList<Group> groupList;
@@ -59,7 +60,8 @@ public class ClientGUI extends JPanel {
 	private Group all = new Group(null, "All");
 	private ChatWindow chatWindow; 
 	private UserPanel userPanel;
-
+	
+	
 	public ClientGUI(MessageListener listener) {
 		this.listener = listener;
 		groupList = new ArrayList<Group>();
@@ -308,6 +310,7 @@ public class ClientGUI extends JPanel {
 					int returnVal = chooser.showOpenDialog(null);
 					if(returnVal == JFileChooser.APPROVE_OPTION) {
 						selectedImage = new ImageIcon(chooser.getSelectedFile().getAbsolutePath());
+						selectedImageName = chooser.getSelectedFile().getName();
 					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
@@ -454,9 +457,10 @@ public class ClientGUI extends JPanel {
 		if (selectedGroup == null) {
 			selectedGroup = groupList.get(0);
 		}
-		ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage);
+		ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage, selectedImageName);
 		listener.update(message);
 		selectedImage = null;
+		selectedImageName = null;
 		tfChatWrite.setText("");
 
 	}
