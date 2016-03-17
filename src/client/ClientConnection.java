@@ -30,15 +30,22 @@ public class ClientConnection implements Runnable {
     private MessageListener listener;
     private String username;
     private Thread thread = new Thread(this);
+    private boolean connectionStatus = false;
 
 	public ClientConnection(String address, int port) {
 		try {
             socket = new Socket(address,port);
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
+			connectionStatus = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	
+	}
+	
+	public boolean hasConnected() {
+		return connectionStatus;
 	}
 
     public void start() {

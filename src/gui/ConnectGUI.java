@@ -89,7 +89,7 @@ public class ConnectGUI extends JPanel {
     }
 
     private void showMessage(String message) {
-        JOptionPane.showMessageDialog(null, message);
+        JOptionPane.showMessageDialog(getParent(), message);
     }
 
     //public static void main(String[] args) {

@@ -68,5 +68,13 @@ public class Message implements Serializable {
 		this.deliveredFromServerTime = deliveredFromServerTime;
 	}
 	
+	/**
+	 * Gets the active group for the current message
+	 * @return group
+	 */
+	public Group getGroup(){
+		return group;
+	}
+	
 	
 }
