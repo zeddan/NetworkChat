@@ -1,12 +1,11 @@
 package gui;
 
 import client.Group;
-import client.interfaces.MessageListener;
+import client.interfaces.ClientGUIListener;
 import gui.button.CustomButton;
 import gui.panels.ChatWindow;
 import gui.panels.UserPanel;
 import message.*;
-import server.User;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +15,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Map;
 import javax.swing.JFileChooser;
 
 /**
@@ -44,31 +41,23 @@ public class ClientGUI extends JPanel {
 
 	private JPanel pnlLeftGroups;
 	private JPanel pnlLeftPrivate;
-	private JLabel lblReciver;
+	private JLabel lblReciever;
 
-	private MessageListener listener;
+	private ClientGUIListener listener;
 	private String username;
-	private Group selectedGroup;
+	private Group currentGroup;
 	private Icon selectedImage;
 	private String selectedImageName;
 	private JTextField tfChatWrite;
 
-	private ArrayList<Group> groupList;
-	private ArrayList<JLabel> groupLabels;
-	private ArrayList<String> onlineClients;
-	private ArrayList<Group> privateMessageList;
-	private Group all = new Group(null, "All");
-	private ChatWindow chatWindow; 
+	private ArrayList<Group> groups;
+	private ChatWindow chatWindow;
 	private UserPanel userPanel;
-	
-	
-	public ClientGUI(MessageListener listener) {
-		this.listener = listener;
-		groupList = new ArrayList<Group>();
-		groupLabels = new ArrayList<JLabel>();
-		onlineClients = new ArrayList<String>();
 
-		selectedGroup = all;
+    private String[] onlineClients;
+
+	public ClientGUI(ClientGUIListener listener) {
+		this.listener = listener;
 
 		setPreferredSize(new Dimension(WIN_WIDTH, WIN_HEIGHT));
 		setLayout(new BorderLayout());
@@ -81,8 +70,8 @@ public class ClientGUI extends JPanel {
 		tfChatWrite = tfChatWrite();
 		pnlMain.add(chatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
-		lblReciver = lblReciver();
-		pnlChatWrite.add(lblReciver, BorderLayout.NORTH);
+		lblReciever = lblReciever();
+		pnlChatWrite.add(lblReciever, BorderLayout.NORTH);
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
 		pnlChatWrite.add(btnImageChooser, BorderLayout.EAST);
 		pnlMain.add(pnlChatWrite, BorderLayout.SOUTH);
@@ -94,35 +83,21 @@ public class ClientGUI extends JPanel {
 		pnlLeftGroups = pnlLeftGroups();
 		pnlLeftPrivate = pnlLeftPrivate();
 		JLabel lblGroupCreate = lblGroupCreate();
-		JLabel lblPrivateCreate = lblPrivateCreate();
-
 		pnlLeftGroups.add(lblGroupList);
 		pnlLeftGroups.add(lblGroupCreate);
-
 		pnlLeftPrivate.add(lblPrivateList);
-		pnlLeftPrivate.add(lblPrivateCreate);
 		pnlLeft.add(pnlLeftGroups);
 		pnlLeft.add(pnlLeftPrivate);
 
 		// RIGHT PANEL
-		userPanel = new UserPanel(pnlRightSize);
+		userPanel = new UserPanel(pnlRightSize, listener);
 
-		//ASSEMBLE
+		// ASSEMBLE
 		add(pnlLeft, BorderLayout.WEST);
 		add(pnlMain, BorderLayout.CENTER);
 		add(userPanel, BorderLayout.EAST);
-
-		allGroupInit();
-		setlblRecivers();
 	}
 
-	private void allGroupInit() {
-		groupList.add(all);
-		JLabel label = lblNewGroup(all.getGroupName());
-		groupLabels.add(label);
-		pnlLeftGroups.add(label);
-		pnlLeftGroups.updateUI();
-	}
 
 	private JPanel pnlChatWrite() {
 		JPanel pnlChatWrite = new JPanel(new BorderLayout());
@@ -136,41 +111,14 @@ public class ClientGUI extends JPanel {
 		return pnlMain;
 	}
 
-	private JLabel lblReciver() {
-		JLabel reciver = new JLabel();
-		reciver.setPreferredSize(new Dimension(70, WIN_HEIGHT/20));
-		reciver.setText("To: ");
-		return reciver;
+	private JLabel lblReciever() {
+		JLabel reciever = new JLabel();
+        reciever.setOpaque(false);
+		reciever.setPreferredSize(new Dimension(70, WIN_HEIGHT/20));
+		reciever.setText("To: ");
+		return reciever;
 	}
 
-	private JLabel lblPrivateCreate() {
-		final JLabel lblPrivateCreate = new JLabel("+ New message", SwingConstants.CENTER);
-		lblPrivateCreate.setForeground(new Color(145,145,145));
-		lblPrivateCreate.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseClicked(MouseEvent mouseEvent) {
-				addPrivate();
-			}
-
-			@Override
-			public void mousePressed(MouseEvent mouseEvent) {}
-
-			@Override
-			public void mouseReleased(MouseEvent mouseEvent) {}
-
-			@Override
-			public void mouseEntered(MouseEvent mouseEvent) {
-				lblPrivateCreate.setForeground(new Color(250,250,250));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent mouseEvent) {
-				lblPrivateCreate.setForeground(new Color(145,145,145));
-			}
-
-		});
-		return lblPrivateCreate;
-	}
 	private JLabel lblNewGroup(String name){
 		final JLabel lbl = new JLabel(name);
 		lbl.setForeground(new Color(145,145,145));
@@ -178,25 +126,20 @@ public class ClientGUI extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				setSelectedGroup(lbl.getText());
+				setCurrentGroup(lbl.getText());
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				lbl.setForeground(new Color(250,250,250));
-
 			}
 
 			@Override
@@ -208,15 +151,15 @@ public class ClientGUI extends JPanel {
 		return lbl;
 	}
 
-
-
 	private JLabel lblGroupCreate() {
 		final JLabel lblGroupCreate = new JLabel("+ Create group", SwingConstants.CENTER);
 		lblGroupCreate.setForeground(new Color(145,145,145));
 		lblGroupCreate.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				addGroup(createGroup());                
+                ArrayList<String> selectedUsers = NewGroupDialog.getRecipients(onlineClients);
+                String groupName = NewGroupDialog.getGroupName();
+                listener.newGroup(selectedUsers, groupName);
 			}
 
 			@Override
@@ -320,22 +263,18 @@ public class ClientGUI extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-
 			}
 		});
 		return btnImageChooser;
@@ -343,143 +282,61 @@ public class ClientGUI extends JPanel {
 
 	public void newChatMessage(ChatMessage message) {
 		chatWindow.append(message.toString(), message.getPicture());
-		addGroup(message.getGroup());
 	}
-
-	public void newDataMessage(DataMessage message) {
-		updateOnlineClients(message.getData());
-	}
-
 
 	public void updateOnlineClients(String[] clientList) {
-		addToGroupAll(clientList);
+        if (groups == null) {
+            groups = new ArrayList<>();
+            groups.add(new Group(clientList, "All"));
+            addGroup(groups.get(0));
+            setCurrentGroup(groups.get(0).getGroupName());
+        }
+        onlineClients = clientList;
 		userPanel.clearUserPanel();
-
-		for(String client : clientList) {
-			if(!client.equals(username)) {
-				onlineClients.add(client);
-				userPanel.appendUserPanel(client);
-			}
-		}
-
+        userPanel.updateOnlineClients(clientList, username);
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+        userPanel.setUsername(username);
 	}
 
-
-	public void setSelectedGroup(String groupName) {
-		for(Group group : groupList) {
-			if(group.getGroupName().equals(groupName)) {
-				selectedGroup = group;
-				setlblRecivers();
+	public void setCurrentGroup(String groupName) {
+		for(Group group : groups) {
+			if(group.getGroupName().equalsIgnoreCase(groupName)) {
+                currentGroup = group;
+                lblReciever.setText("To: " + currentGroup.getGroupName());
+                lblReciever.updateUI();
 			}
 		}
-		
 	}
 
-	public void addToGroupAll(String[] clientList) {
-		Group tempGroup = new Group(clientList, "All");
+    public synchronized void addPrivateMessage(Group group) {
+        String groupName = group.getGroupName();
+        JLabel label = lblNewGroup(groupName);
+        groups.add(group);
+        pnlLeftPrivate.add(label);
+        pnlLeftPrivate.updateUI();
+        setCurrentGroup(groupName);
+        tfChatWrite.requestFocus();
+    }
 
-		if(selectedGroup.getGroupName().equals("All"))
-			selectedGroup = tempGroup;
-			setlblRecivers();
-		groupList.set(0, tempGroup);
-	}
-
-	public synchronized void addGroup(Group inGroup) {	
-		boolean foundGroupName = false;
-		for(Group group : groupList) {
-			if(group.getGroupName().equals(inGroup.getGroupName()))
-				foundGroupName = true;
-		}
-		if(!foundGroupName){
-			JLabel label = lblNewGroup(inGroup.getGroupName());
-			groupList.add(inGroup);
-			groupLabels.add(label);
-			pnlLeftGroups.add(label);
-			pnlLeftGroups.updateUI();
-		}
-	}
-
-	private void addPrivate() {
-		boolean foundPMName = false;
-		String name;
-		for(Group group : privateMessageList) {
-			if(group.getGroupName().equals(name))
-				foundPMName = true;
-		}
-		if(!foundPMName){
-			JLabel label = lblNewGroup(name);
-			groupLabels.add(label);
-			pnlLeftPrivate.add(label);
-			pnlLeftPrivate.updateUI();
-		}
-	}
-
-	private Group createGroup() {
-		Group group;
-		boolean groupNameUsed = false;
-		String groupName;
-		String[] recipients = presentRecipients();
-		do{
-			groupName = JOptionPane.showInputDialog("Enter group name");
-			for(int i = 0; i < groupList.size(); i++){
-				groupNameUsed = groupList.get(i).isEqualTo(groupName);
-			}
-		}while(groupNameUsed);
-		group = new Group(recipients, groupName);
-		return group;
-	}
-
-	private String[] presentRecipients() {
-		Map<String, User> users = new Hashtable<>();
-		for (int i=0; i < onlineClients.size(); i++) {
-			users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
-		}
-		ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-		String[] recipients = new String[selectedUsers.size() + 1];
-
-		for(int i = 0; i < selectedUsers.size(); i++){
-			recipients[i] = selectedUsers.get(i).getUserName();
-		}
-		recipients[selectedUsers.size()] = username;
-
-		return recipients;
-	}
-	
-	private void setlblRecivers() {
-		lblReciver.setText("To: " + selectedGroup.getGroupName());
-	}
+	public synchronized void addGroup(Group group) {
+        String groupName = group.getGroupName();
+        JLabel label = lblNewGroup(groupName);
+        groups.add(group);
+        pnlLeftGroups.add(label);
+        pnlLeftGroups.updateUI();
+        setCurrentGroup(groupName);
+        tfChatWrite.requestFocus();
+    }
 
 	private void sendChatMessage() {
-		if (selectedGroup == null) {
-			selectedGroup = groupList.get(0);
-		}
-		ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage, selectedImageName);
-		listener.update(message);
+		ChatMessage message = new ChatMessage(username, currentGroup, tfChatWrite.getText(), selectedImage, selectedImageName);
+		listener.onMessage(message);
 		selectedImage = null;
 		selectedImageName = null;
 		tfChatWrite.setText("");
-
-	}
-
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				JFrame frame = new JFrame("Client");
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.add(new ClientGUI(null));
-				frame.pack();
-				frame.setLocation(
-						dim.width/2-frame.getSize().width/2,
-						dim.height/2-frame.getSize().height/2);
-				frame.setVisible(true);
-			}
-		});
 	}
 
 }

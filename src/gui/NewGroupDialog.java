@@ -18,12 +18,12 @@ import java.util.Map;
  */
 public class NewGroupDialog extends JPanel {
 
-    private Map users;
+    private String[] users;
     private JScrollPane scrollPane;
     private UsersPanel usersPanel;
-    private static ArrayList<User> selectedUsers;
+    private static ArrayList<String> selectedUsers;
 
-    public static ArrayList<User> display(Map<String, User> users) {
+    public static ArrayList<String> getRecipients(String[] users) {
         UIManager.put("OptionPane.background", Color.white);
         UIManager.put("Panel.background", Color.white);
         selectedUsers = new ArrayList<>();
@@ -47,6 +47,10 @@ public class NewGroupDialog extends JPanel {
         return i == 1 ? selectedUsers : null;
     }
 
+    public static String getGroupName() {
+        return JOptionPane.showInputDialog("Enter group name");
+    }
+
     private static void addActionListener(final CustomButton button) {
         button.addActionListener(new ActionListener() {
             @Override
@@ -58,7 +62,7 @@ public class NewGroupDialog extends JPanel {
         });
     }
 
-    public NewGroupDialog(Map<String, User> users) {
+    public NewGroupDialog(String[] users) {
         this.users = users;
         usersPanel = new UsersPanel();
         scrollPane = new JScrollPane(usersPanel);
@@ -85,12 +89,11 @@ public class NewGroupDialog extends JPanel {
 
         public UsersPanel() {
             cols = 5;
-            rows = users.size() % cols == 0 ?
-                    users.size() / cols : users.size() / cols + 1;
+            rows = users.length % cols == 0 ?
+                    users.length / cols : users.length / cols + 1;
             setLayout(new GridLayout(rows, cols));
-            for (Object object : users.values()) {
-                User user = (User) object;
-                add(new UserLabel(user.getUserName()));
+            for (String user : users) {
+                add(new UserLabel(user));
             }
         }
 
@@ -116,13 +119,12 @@ public class NewGroupDialog extends JPanel {
 
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
-                    User user = (User) users.get(name);
-                    if (selectedUsers.contains(user)) {
-                        selectedUsers.remove(user);
+                    if (selectedUsers.contains(name)) {
+                        selectedUsers.remove(name);
                         pressed = false;
                         setTextColor(black);
                     } else {
-                        selectedUsers.add(user);
+                        selectedUsers.add(name);
                         pressed = true;
                         setTextColor(grey);
                     }

@@ -1,5 +1,6 @@
 package client;
 import client.interfaces.MessageListener;
+import client.interfaces.ClientGUIListener;
 import gui.ClientGUI;
 import gui.ConnectGUI;
 import message.*;
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * 
@@ -22,6 +24,8 @@ public class ClientController {
 	private JFrame connectFrame;
 	private JFrame clientFrame;
 	private ClientConnection clientConnection;
+    private String[] onlineClients;
+    private ArrayList<Group> groups;
 
 	public ClientController () {
 		connectGui = new ConnectGUI(new ConnectGUIListener());
@@ -89,21 +93,40 @@ public class ClientController {
 		}
 	}
 
-	private class ClientGUIListener implements MessageListener {
-		@Override
-		public void update(Message message) {
-			clientConnection.sendMessage(message);
-		}
-	}
+	private class ClientGUIListener implements client.interfaces.ClientGUIListener {
+
+        @Override
+        public void newPrivateMessage(String sender, String recipient) {
+            Group group = new Group(new String[]{sender, recipient}, recipient);
+            groups.add(group);
+            clientGui.addPrivateMessage(group);
+        }
+
+        @Override
+        public void newGroup(ArrayList<String> users, String groupName) {
+            String[] array = users.toArray(new String[users.size()]);
+            Group group = new Group(array, groupName);
+            groups.add(group);
+            clientGui.addGroup(group);
+        }
+
+        @Override
+        public void onMessage(Message message) {
+            clientConnection.sendMessage(message);
+        }
+    }
 
 	private class ClientConnectionListener implements MessageListener {
 		@Override
 		public void update(Message message) {
 			if (message instanceof DataMessage) {
-				String[] onlineClients = ((DataMessage) message).getData();
+                onlineClients = ((DataMessage) message).getData();
+                groups = new ArrayList<>();
+                groups.add(new Group(onlineClients, "All"));
 				clientGui.updateOnlineClients(onlineClients);
-			} else if (message instanceof ChatMessage)
-				clientGui.newChatMessage((ChatMessage) message);
+			} else if (message instanceof ChatMessage) {
+                clientGui.newChatMessage((ChatMessage) message);
+            }
 		}
 	}
 
