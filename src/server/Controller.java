@@ -26,7 +26,7 @@ public class Controller {
 	private Server server;
 	private Enumeration enumeration;
 	
-	private Hashtable<String, User> onlineUserTable; // table med alla anslutna Users
+	private Hashtable<String, User> onlineUserTable;
 	private Hashtable<String, ArrayList<ChatMessage>> messageQueue;
 	
 	public Controller(ServerGUI gui) {

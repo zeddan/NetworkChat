@@ -58,8 +58,6 @@ public class User implements Runnable {
 					
 					controller.processChatMessage(object);
 				}
-				//String string = controller.decodeMessage(object);
-				//controller.addUserToList(newUser);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

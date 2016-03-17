@@ -20,7 +20,6 @@ public class Server extends Thread {
 	private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private Thread thread;
 
 	public Server(Controller controller, int port) {
 		this.controller = controller;
