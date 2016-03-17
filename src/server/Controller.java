@@ -84,12 +84,13 @@ public class Controller {
 			for(int i = 0; i < list.size(); i++) {
 				ChatMessage message = list.get(i);
 				System.out.println("Found queued message");
+				message.setDeliveredToServerTime(getTime());
 				user.send(message);
 				list.remove(i);
-				if(list.isEmpty()) {
-					System.out.println("Removing Arraylist " + user.getUserName());
-					messageQueue.remove(user);
-				}
+			}
+			if(list.isEmpty()) {
+				System.out.println("Removing Arraylist " + user.getUserName());
+				messageQueue.remove(user);
 			}
 		}
 	}
