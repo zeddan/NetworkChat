@@ -49,7 +49,7 @@ public class ClientController {
 
 	}
 
-	public void createClientFrame(String username) {
+	public void createClientFrame(final String username) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
