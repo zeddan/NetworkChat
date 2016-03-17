@@ -13,7 +13,8 @@ import javax.swing.text.StyledDocument;
 
 /**
  * 
- * @author simonmansson
+ * @author simonmansson 
+ * Main chatWindow for presenting text and Images
  * 
  */
 public class ChatWindow extends JPanel {
@@ -46,7 +47,7 @@ public class ChatWindow extends JPanel {
 			doc.insertString(doc.getLength(), message + "\n", null);
 			if (image != null) {
 				StyleConstants.setIcon(imgStyle, image);
-				doc.insertString(doc.getLength(), "ignored", imgStyle);
+				doc.insertString(doc.getLength(), "", imgStyle);
 				doc.insertString(doc.getLength(), "\n", null);
 			}
 		} catch (Exception ex) {
