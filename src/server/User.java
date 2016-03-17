@@ -76,7 +76,7 @@ public class User implements Runnable {
 				ChatMessage cm = (ChatMessage) object;
 				controller.logToGUI(new SystemEntry("ChattMessage sent to: " +userName, SystemEntryType.INFO).toString() + "\n"
 						+ cm.getChatMessage() + "\n" +
-						cm.);
+						cm.getFileName());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
