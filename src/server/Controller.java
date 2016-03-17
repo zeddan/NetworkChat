@@ -2,23 +2,16 @@ package server;
 
 import gui.server.ServerGUI;
 import message.ChatMessage;
-import message.CommandMessage;
-import message.Commands;
 import message.DataMessage;
 import server.log.SystemEntry;
 import server.log.SystemEntryType;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import client.Group;
 
@@ -28,18 +21,17 @@ import client.Group;
  *
  */
 public class Controller {
-	
+
 	private ServerGUI gui;
 	private Server server;
 	private Enumeration enumeration;
-	
+
 	private OnlineUsers onlineUserTable;
 	private Messages messageQueue;
 
-	
 	public Controller(ServerGUI gui) {
-		onlineUserTable = new OnlineUsers(); //new Hashtable<String, User>();
-		messageQueue = new Messages(); //new Hashtable<String, ArrayList<ChatMessage>>();
+		onlineUserTable = new OnlineUsers();
+		messageQueue = new Messages();
 		this.gui = gui;
 	}
 
@@ -56,12 +48,11 @@ public class Controller {
 			user.send(dataMessage);
 		}
 	}
-	
+
 	public void logToGUI(String message){
 		gui.writeLogToGUI(message);
 	}
-	
-	
+
 	public String[] getClientsOnline() {
 		ArrayList<String> list = new ArrayList<String>();
 		enumeration = onlineUserTable.keys();
@@ -74,7 +65,7 @@ public class Controller {
 		}
 		return usersList;
 	}
-	
+
 	public void processChatMessage(Object object) {
 		ChatMessage message = (ChatMessage) object;
 		message.setDeliveredToServerTime(getTime());
@@ -91,38 +82,18 @@ public class Controller {
 	}
 
 	public void checkMessageQueue(User user) {
-	LinkedList<ChatMessage> list = messageQueue.get(user.getUserName());
-	if(list != null) {
-		while(!list.isEmpty()){
-			ChatMessage message = list.remove();
-			message.setDeliveredToServerTime(getTime());
-			user.send(message);
-		}
-		for(int i = 0; i < list.size(); i++) {
-
-		}
-		if(list.isEmpty()) {
-			messageQueue.remove(user.getUserName());
+		LinkedList<ChatMessage> list = messageQueue.get(user.getUserName());
+		if(list != null) {
+			while(!list.isEmpty()){
+				ChatMessage message = list.remove();
+				message.setDeliveredToServerTime(getTime());
+				user.send(message);
+			}
+			if(list.isEmpty()) {
+				messageQueue.remove(user.getUserName());
+			}
 		}
 	}
-}
-
-	
-//	public void checkMessageQueue(User user) {
-//		ArrayList<ChatMessage> list = messageQueue.get(user.getUserName());
-//		System.out.println("list= " + list.size() + " user.getUserName");
-//		if(list != null) {
-//			for(int i = 0; i < list.size(); i++) {
-//				ChatMessage message = list.get(i);
-//				message.setDeliveredToServerTime(getTime());
-//				user.send(message);
-//				list.remove(i);
-//			}
-//			if(list.isEmpty()) {
-//				messageQueue.remove(user.getUserName());
-//			}
-//		}
-//	}
 
 	private void addToMessageQueue(String userName, ChatMessage message) {
 		LinkedList<ChatMessage> list = messageQueue.get(userName);
@@ -133,14 +104,14 @@ public class Controller {
 		} else {
 			list.add(message);
 		}
-		
+
 	}
-	
+
 	public void startServer(int port) {
 		server = new Server(this, port);
 		server.start();
 	}
-	
+
 	public void stopServer(){
 		server.stopServer();
 		String[] allOnlineClients = getClientsOnline();
@@ -159,13 +130,13 @@ public class Controller {
 		onlineUserTable.put(newUser);
 		sendUserListToAllClients();
 	}
-	
+
 	public void sendUserListToAllClients() {
 		String[] list = getClientsOnline();
 		DataMessage message = new DataMessage(null, null, list);
 		sendToAllUsers(message);
 	}
-	
+
 	public String getTime() {
 		DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 		Date date = new Date();

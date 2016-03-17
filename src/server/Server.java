@@ -16,7 +16,7 @@ public class Server extends Thread {
 
 	private Controller controller;
 	private int port;
-	
+
 	private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -31,19 +31,18 @@ public class Server extends Thread {
 		try {
 			serverSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		running = false;
 	}
-	
+
 	public void run() {
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		while(running) {
 			try {
 				socket = serverSocket.accept();
@@ -52,9 +51,9 @@ public class Server extends Thread {
 				e.printStackTrace();
 			}
 		}
-		try{
+		try {
 			serverSocket.close();
-		}catch (IOException e){
+		}catch (IOException e) {
 		}
 	}
 }

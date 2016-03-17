@@ -1,6 +1,5 @@
 package server;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -9,7 +8,6 @@ import java.net.Socket;
 import message.ChatMessage;
 import message.CommandMessage;
 import message.Commands;
-import message.DataMessage;
 import server.log.SystemEntry;
 import server.log.SystemEntryType;
 
@@ -19,17 +17,17 @@ import server.log.SystemEntryType;
  *
  */
 public class User implements Runnable {
-	
+
 	private String userName;
-	
+
 	private Controller controller;
-	
+
 	private boolean active = true;
-	
+
 	private Socket socket;
 	private ObjectInputStream inputStream;
 	private ObjectOutputStream outputStream;
-	
+
 	public User(Controller controller, Socket socket) {
 		this.controller = controller;
 		this.socket = socket;
@@ -57,14 +55,12 @@ public class User implements Runnable {
 						controller.checkMessageQueue(this);
 					}
 				} else if(object instanceof ChatMessage) {
-					
 					controller.processChatMessage(object);
 				}
 			} catch (ClassNotFoundException e) {
-				//e.printStackTrace();
+
 			} catch (IOException e) {
 				cancel();
-				//e.printStackTrace();
 			}
 		}
 	}
@@ -75,7 +71,7 @@ public class User implements Runnable {
 			if(object instanceof ChatMessage){
 				ChatMessage cm = (ChatMessage) object;
 				controller.logToGUI(new SystemEntry("Message to: " + userName + ", from: " + cm.getSender() + ", "+ cm.getChatMessage() + " filename: " + 
-				cm.getFileName(), SystemEntryType.INFO).toString() + "\n");
+						cm.getFileName(), SystemEntryType.INFO).toString() + "\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
