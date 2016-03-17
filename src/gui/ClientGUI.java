@@ -101,6 +101,7 @@ public class ClientGUI extends JPanel {
 
 	private JPanel pnlChatWrite() {
 		JPanel pnlChatWrite = new JPanel(new BorderLayout());
+        pnlChatWrite.setOpaque(false);
 		return pnlChatWrite;
 	}
 

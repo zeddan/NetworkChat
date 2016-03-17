@@ -18,9 +18,9 @@ public class UserPanel extends JPanel{
 
 	public UserPanel(Dimension userPanelSize, ClientGUIListener listener) {
         this.listener = listener;
-		setPreferredSize(userPanelSize);
-		setBorder(new EmptyBorder(15,15,10,0));
         setLayout(new FlowLayout());
+		setPreferredSize(userPanelSize);
+		setBorder(new EmptyBorder(10, 15, 0, 10));
 		setBackground(bgGrey);
 		add(lblChatUsers());
         add(pnlUserList());
@@ -49,13 +49,16 @@ public class UserPanel extends JPanel{
         JLabel lbl = new JLabel(username);
         lbl.setForeground(txtGrey);
         lbl.setOpaque(false);
+        lbl.setPreferredSize(new Dimension(100, 10));
         lbl.addMouseListener(new LabelListener(lbl));
         pnlUserList.add(lbl);
         updateUI();
 	}
 
     private JLabel lblChatUsers() {
-        JLabel lblChatUsers = new JLabel("Users", SwingConstants.CENTER);
+        JLabel lblChatUsers = new JLabel("All users");
+        lblChatUsers.setBorder(new EmptyBorder(0,12,0,0));
+        lblChatUsers.setPreferredSize(new Dimension(getPreferredSize().width, 10));
         lblChatUsers.setForeground(Color.WHITE);
         return lblChatUsers;
     }
@@ -63,10 +66,12 @@ public class UserPanel extends JPanel{
     private JPanel pnlUserList() {
         pnlUserList = new JPanel();
         pnlUserList.setLayout(new BoxLayout(pnlUserList, BoxLayout.Y_AXIS));
-        pnlUserList.setBackground(bgGrey);
+        pnlUserList.setOpaque(false);
+        //pnlUserList.setBackground(bgGrey);
+        //pnlUserList.setBackground(Color.RED);
         int w = (int) getPreferredSize().getWidth();
         int h = (int) getPreferredSize().getHeight();
-        Dimension d = new Dimension(w-50, h-100);
+        Dimension d = new Dimension(w-25, h-50);
         pnlUserList.setPreferredSize(d);
         return pnlUserList;
     }

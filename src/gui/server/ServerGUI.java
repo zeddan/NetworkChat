@@ -59,9 +59,10 @@ public class ServerGUI extends JPanel implements ActionListener{
     private JTextArea taLog() {
         JTextArea taLog = new JTextArea();
         taLog.setEditable(false);
-        Dimension size = new Dimension(WIN_WIDTH-PNL_LEFT_WIDTH, WIN_HEIGHT);
- //       taLog.setPreferredSize(size);
         taLog.setBorder(new EmptyBorder(10, 10, 10, 10));
+        taLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        DefaultCaret caret = (DefaultCaret) taLog.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         return taLog;
     }
 
@@ -70,16 +71,10 @@ public class ServerGUI extends JPanel implements ActionListener{
         pnlMain.setLayout(new BorderLayout());
         pnlMain.setPreferredSize(new Dimension(WIN_WIDTH-WIN_WIDTH/4, WIN_HEIGHT));
         taLog = taLog();
-
 		JScrollPane scrollableUserList = new JScrollPane(taLog);
 		scrollableUserList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollableUserList.setBorder(null);
-		
         pnlMain.add(scrollableUserList);
-        
-        DefaultCaret caret = (DefaultCaret) taLog.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        
         return pnlMain;
     }
 
@@ -116,7 +111,6 @@ public class ServerGUI extends JPanel implements ActionListener{
 	/**
 	 * Listener. Listen for button click. Starts the server. 
 	 */
-    
 	public void actionPerformed(ActionEvent ae) {
 		if(!started){
 			controller.startServer(Integer.parseInt(tfPort.getText()));

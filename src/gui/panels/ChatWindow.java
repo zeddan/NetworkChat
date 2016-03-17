@@ -6,10 +6,7 @@ import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.text.*;
 
 /**
  * 
@@ -30,6 +27,8 @@ public class ChatWindow extends JPanel {
 		chatWindow.setAutoscrolls(true);
 		chatWindow.setEditable(false);
 		chatWindow.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        DefaultCaret caret = (DefaultCaret) chatWindow.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		JScrollPane scroll = new JScrollPane(chatWindow, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setViewportView(chatWindow);
 		this.add(scroll, BorderLayout.CENTER);
