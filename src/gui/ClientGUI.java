@@ -106,6 +106,10 @@ public class ClientGUI extends JPanel {
 		
 		//groupsakngang
 		
+		allGroupInit();
+	}
+
+	private void allGroupInit() {
 		groupList.add(all);
 		JLabel label = lblNewGroup(all.getGroupName());
 		groupLabels.add(label);
