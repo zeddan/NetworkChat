@@ -110,6 +110,7 @@ public class ClientGUI extends JPanel {
 		add(userPanel, BorderLayout.EAST);
 
 		allGroupInit();
+		setlblRecivers();
 	}
 
 	private void allGroupInit() {
@@ -368,9 +369,10 @@ public class ClientGUI extends JPanel {
 		for(Group group : groupList) {
 			if(group.getGroupName().equals(groupName)) {
 				selectedGroup = group;
+				setlblRecivers();
 			}
 		}
-		System.out.println(selectedGroup.getGroupName());
+		
 	}
 
 	public void addToGroupAll(String[] clientList) {
@@ -378,11 +380,11 @@ public class ClientGUI extends JPanel {
 
 		if(selectedGroup.getGroupName().equals("All"))
 			selectedGroup = tempGroup;
-
+			setlblRecivers();
 		groupList.set(0, tempGroup);
 	}
 
-	private synchronized void addGroup(Group inGroup) {	
+	public synchronized void addGroup(Group inGroup) {	
 		boolean foundGroupName = false;
 		for(Group group : groupList) {
 			if(group.getGroupName().equals(inGroup.getGroupName()))
@@ -426,22 +428,26 @@ public class ClientGUI extends JPanel {
 		group = new Group(recipients, groupName);
 		return group;
 	}
-	
-	private String[] presentRecipients() {
-	//  mock start
-			Map<String, User> users = new Hashtable<>();
-			for (int i=0; i < onlineClients.size(); i++) {
-				users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
-			} // mock end
-			ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-			String[] recipients = new String[selectedUsers.size() + 1];
 
-			for(int i = 0; i < selectedUsers.size(); i++){
-				recipients[i] = selectedUsers.get(i).getUserName();
-			}
-			recipients[selectedUsers.size()] = username;
-			
-			return recipients;
+	private String[] presentRecipients() {
+		//  mock start
+		Map<String, User> users = new Hashtable<>();
+		for (int i=0; i < onlineClients.size(); i++) {
+			users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
+		} // mock end
+		ArrayList<User> selectedUsers = NewGroupDialog.display(users);
+		String[] recipients = new String[selectedUsers.size() + 1];
+
+		for(int i = 0; i < selectedUsers.size(); i++){
+			recipients[i] = selectedUsers.get(i).getUserName();
+		}
+		recipients[selectedUsers.size()] = username;
+
+		return recipients;
+	}
+	
+	private void setlblRecivers() {
+		lblReciver.setText("To: " + selectedGroup.getGroupName());
 	}
 
 	private void sendChatMessage() {
