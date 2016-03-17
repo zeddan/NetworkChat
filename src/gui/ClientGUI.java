@@ -44,6 +44,7 @@ public class ClientGUI extends JPanel {
 
 	private JPanel pnlLeftGroups;
 	private JPanel pnlLeftPrivate;
+	private JLabel lblReciver;
 
 	private MessageListener listener;
 	private String username;
@@ -77,6 +78,8 @@ public class ClientGUI extends JPanel {
 		tfChatWrite = tfChatWrite();
 		pnlMain.add(chatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
+		lblReciver = lblReciver();
+		pnlChatWrite.add(lblReciver, BorderLayout.NORTH);
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
 		pnlChatWrite.add(btnImageChooser, BorderLayout.EAST);
 		pnlMain.add(pnlChatWrite, BorderLayout.SOUTH);
@@ -107,6 +110,7 @@ public class ClientGUI extends JPanel {
 		add(userPanel, BorderLayout.EAST);
 
 		allGroupInit();
+		setlblRecivers();
 	}
 
 	private void allGroupInit() {
@@ -127,6 +131,13 @@ public class ClientGUI extends JPanel {
 		pnlMain.setBackground(Color.WHITE);
 		pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
 		return pnlMain;
+	}
+
+	private JLabel lblReciver() {
+		JLabel reciver = new JLabel();
+		reciver.setPreferredSize(new Dimension(70, WIN_HEIGHT/20));
+		reciver.setText("To: ");
+		return reciver;
 	}
 
 	private JLabel lblPrivateCreate() {
@@ -358,9 +369,10 @@ public class ClientGUI extends JPanel {
 		for(Group group : groupList) {
 			if(group.getGroupName().equals(groupName)) {
 				selectedGroup = group;
+				setlblRecivers();
 			}
 		}
-		System.out.println(selectedGroup.getGroupName());
+		
 	}
 
 	public void addToGroupAll(String[] clientList) {
@@ -368,11 +380,11 @@ public class ClientGUI extends JPanel {
 
 		if(selectedGroup.getGroupName().equals("All"))
 			selectedGroup = tempGroup;
-
+			setlblRecivers();
 		groupList.set(0, tempGroup);
 	}
 
-	private synchronized void addGroup(Group inGroup) {	
+	public synchronized void addGroup(Group inGroup) {	
 		boolean foundGroupName = false;
 		for(Group group : groupList) {
 			if(group.getGroupName().equals(inGroup.getGroupName()))
@@ -406,6 +418,18 @@ public class ClientGUI extends JPanel {
 		Group group;
 		boolean groupNameUsed = false;
 		String groupName;
+		String[] recipients = presentRecipients();
+		do{
+			groupName = JOptionPane.showInputDialog("Enter group name");
+			for(int i = 0; i < groupList.size(); i++){
+				groupNameUsed = groupList.get(i).isEqualTo(groupName);
+			}
+		}while(groupNameUsed);
+		group = new Group(recipients, groupName);
+		return group;
+	}
+
+	private String[] presentRecipients() {
 		//  mock start
 		Map<String, User> users = new Hashtable<>();
 		for (int i=0; i < onlineClients.size(); i++) {
@@ -419,16 +443,12 @@ public class ClientGUI extends JPanel {
 		}
 		recipients[selectedUsers.size()] = username;
 
-		do{
-			groupName = JOptionPane.showInputDialog("Enter group name");
-			for(int i = 0; i < groupList.size(); i++){
-				groupNameUsed = groupList.get(i).isEqualTo(groupName);
-			}
-		}while(groupNameUsed);
-		group = new Group(recipients, groupName);
-		return group;
+		return recipients;
 	}
-
+	
+	private void setlblRecivers() {
+		lblReciver.setText("To: " + selectedGroup.getGroupName());
+	}
 
 	private void sendChatMessage() {
 		if (selectedGroup == null) {
