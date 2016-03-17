@@ -48,6 +48,7 @@ public class ClientGUI extends JPanel {
 	private String username;
 	private Group selectedGroup;
 	private Icon selectedImage;
+	private JTextField tfChatWrite;
 
 	private ArrayList<Group> groupList;
 	private ArrayList<JLabel> groupLabels;
@@ -72,7 +73,7 @@ public class ClientGUI extends JPanel {
 		chatWindow = new ChatWindow();
 		JPanel pnlMain = pnlMain();
 		CustomButton btnImageChooser = btnImageChooser();
-		JTextField tfChatWrite = tfChatWrite();
+		tfChatWrite = tfChatWrite();
 		pnlMain.add(chatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
@@ -298,13 +299,7 @@ public class ClientGUI extends JPanel {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (selectedGroup == null) {
-						selectedGroup = groupList.get(0);
-					}
-					ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage);
-					listener.update(message);
-					selectedImage = null;
-					tfChatWrite.setText("");
+					sendChatMessage();
 				}
 			}
 
@@ -415,6 +410,17 @@ public class ClientGUI extends JPanel {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public void sendChatMessage() {
+		if (selectedGroup == null) {
+			selectedGroup = groupList.get(0);
+		}
+		ChatMessage message = new ChatMessage(username, selectedGroup, tfChatWrite.getText(), selectedImage);
+		listener.update(message);
+		selectedImage = null;
+		tfChatWrite.setText("");
+		
 	}
 
 	public static void main(String[] args) {
