@@ -5,13 +5,19 @@ import message.ChatMessage;
 import message.CommandMessage;
 import message.Commands;
 import message.DataMessage;
+import server.log.SystemEntry;
+import server.log.SystemEntryType;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import client.Group;
 
@@ -29,10 +35,32 @@ public class Controller {
 	private Hashtable<String, User> onlineUserTable; // table med alla anslutna Users
 	private Hashtable<String, ArrayList<ChatMessage>> messageQueue;
 	
+//	private final static Logger requestLog = Logger.getLogger("requests"); 
+//	private final static Logger errorLog = Logger.getLogger("errors");
+//	private FileHandler requestFile;
+//	private FileHandler errorFile;	
+	
 	public Controller(ServerGUI gui) {
 		onlineUserTable = new Hashtable<String, User>();
 		messageQueue = new Hashtable<String, ArrayList<ChatMessage>>();
 		this.gui = gui;
+//		try {
+//			requestFile = new FileHandler("files/requestLog.log");
+//			errorFile = new FileHandler("files/errorLog.log");
+//	    	requestFile.setFormatter(new SimpleFormatter()); // xml default
+//	    	requestLog.setUseParentHandlers(true); // not in console
+//	    	requestLog.addHandler(requestFile); // log to file
+//	    	errorLog.addHandler(errorFile); // log to file (and console)
+//
+//		} catch (SecurityException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+
 	}
 
 	public User findOnlineUser(String userName) {
@@ -50,6 +78,8 @@ public class Controller {
 	}
 	
 	public String[] getClientsOnline() {
+//		requestLog.info("In getClientsOnline");
+		gui.writeLogToGUI(new SystemEntry("Vi testar detta från getClientsOnline", SystemEntryType.INFO).toString() + "\n");
 		ArrayList<String> list = new ArrayList<String>();
 		enumeration = onlineUserTable.keys();
 		while(enumeration.hasMoreElements()) {

@@ -45,6 +45,10 @@ public class ServerGUI extends JPanel implements ActionListener{
         LogReader logReader = new LogReader();
         taLog.setText(logReader.read());
     }
+    
+    public void writeLogToGUI(String text){
+    	taLog.append(text);
+    }
 
     private JTextArea taLog() {
         JTextArea taLog = new JTextArea();
