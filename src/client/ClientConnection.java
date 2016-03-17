@@ -66,7 +66,6 @@ public class ClientConnection implements Runnable {
 		try {
 			oos.writeObject(message);
 			oos.flush();
-			System.out.println("Message sent!");
 		} catch (IOException e) {
 			System.out.println("Message could not be sent!");
 		}
@@ -97,7 +96,6 @@ public class ClientConnection implements Runnable {
             try {
                 Message message = (Message) ois.readObject();
                 listener.update(message);
-                System.out.println("Callback made");
             } catch (ClassNotFoundException | IOException e) {
                 System.out.println("Could not cast to Message");
             }

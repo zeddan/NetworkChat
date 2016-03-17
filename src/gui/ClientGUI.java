@@ -258,7 +258,6 @@ public class ClientGUI extends JPanel {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				System.out.println(chooser.getSelectedFile().getAbsolutePath());
 			}
 
 			@Override
