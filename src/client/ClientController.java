@@ -12,7 +12,8 @@ import java.awt.*;
 /**
  * 
  * @author simonmansson
- *
+ * Handels the creation of connection and gui frames and passing of messages 
+ * between the server and gui.
  */
 
 public class ClientController {
@@ -27,19 +28,25 @@ public class ClientController {
 		clientGui = new ClientGUI(new ClientGUIListener());
 		createConnectFrame();
 	}
-
+	
+	/**
+	 * 
+	 * @param address Server address : String
+	 * @param port Server port : int
+	 * @param username Client username: String
+	 */
 	public void connect(String address, int port, String username) {
 		clientConnection = new ClientConnection(address, port);
 		if (clientConnection.hasConnected()) {
-        clientConnection.setListener(new ClientConnectionListener());
-        clientConnection.setUsername(username);
-        clientConnection.start();
-        connectFrame.dispose();
-        createClientFrame(username);
+			clientConnection.setListener(new ClientConnectionListener());
+			clientConnection.setUsername(username);
+			clientConnection.start();
+			connectFrame.dispose();
+			createClientFrame(username);
 		} else {
 			JOptionPane.showMessageDialog(connectFrame, "Could not Connect");
 		}
-		
+
 	}
 
 	public void createClientFrame(String username) {
@@ -75,32 +82,32 @@ public class ClientController {
 		});
 	}
 
-    private class ConnectGUIListener implements ConnectGUI.ConnectGUIListener {
-        @Override
-        public void onConnect(String address, int port, String username) {
-            connect(address, port, username);
-        }
-    }
-
-    private class ClientGUIListener implements MessageListener {
-        @Override
-        public void update(Message message) {
-            clientConnection.sendMessage(message);
-        }
-    }
-
-	private class ClientConnectionListener implements MessageListener {
-        @Override
-		public void update(Message message) {
-            if (message instanceof DataMessage) {
-                String[] onlineClients = ((DataMessage) message).getData();
-                clientGui.updateOnlineClients(onlineClients);
-            } else if (message instanceof ChatMessage)
-                clientGui.newChatMessage((ChatMessage) message);
+	private class ConnectGUIListener implements ConnectGUI.ConnectGUIListener {
+		@Override
+		public void onConnect(String address, int port, String username) {
+			connect(address, port, username);
 		}
 	}
 
-    public static void main(String[] args) {
-        new ClientController();
-    }
+	private class ClientGUIListener implements MessageListener {
+		@Override
+		public void update(Message message) {
+			clientConnection.sendMessage(message);
+		}
+	}
+
+	private class ClientConnectionListener implements MessageListener {
+		@Override
+		public void update(Message message) {
+			if (message instanceof DataMessage) {
+				String[] onlineClients = ((DataMessage) message).getData();
+				clientGui.updateOnlineClients(onlineClients);
+			} else if (message instanceof ChatMessage)
+				clientGui.newChatMessage((ChatMessage) message);
+		}
+	}
+
+	public static void main(String[] args) {
+		new ClientController();
+	}
 }

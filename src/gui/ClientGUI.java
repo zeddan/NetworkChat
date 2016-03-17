@@ -373,7 +373,18 @@ public class ClientGUI extends JPanel {
 	}
 
 	private synchronized void addGroup(Group inGroup) {	
-	
+		boolean foundGroupName = false;
+		for(Group group : groupList) {
+			if(group.getGroupName().equals(inGroup.getGroupName()))
+				foundGroupName = true;
+		}
+		if(!foundGroupName){
+			JLabel label = lblNewGroup(inGroup.getGroupName());
+			groupList.add(inGroup);
+			groupLabels.add(label);
+			pnlLeftGroups.add(label);
+			pnlLeftGroups.updateUI();
+		}
 	}
 
 	private void addPrivate(Group inGroup) {
