@@ -44,6 +44,7 @@ public class ClientGUI extends JPanel {
 
 	private JPanel pnlLeftGroups;
 	private JPanel pnlLeftPrivate;
+	private JLabel lblReciver;
 
 	private MessageListener listener;
 	private String username;
@@ -77,6 +78,8 @@ public class ClientGUI extends JPanel {
 		tfChatWrite = tfChatWrite();
 		pnlMain.add(chatWindow, BorderLayout.CENTER);
 		JPanel pnlChatWrite = pnlChatWrite();
+		lblReciver = lblReciver();
+		pnlChatWrite.add(lblReciver, BorderLayout.NORTH);
 		pnlChatWrite.add(tfChatWrite, BorderLayout.CENTER);
 		pnlChatWrite.add(btnImageChooser, BorderLayout.EAST);
 		pnlMain.add(pnlChatWrite, BorderLayout.SOUTH);
@@ -127,6 +130,13 @@ public class ClientGUI extends JPanel {
 		pnlMain.setBackground(Color.WHITE);
 		pnlMain.setBorder(new EmptyBorder(10, 10, 10, 10));
 		return pnlMain;
+	}
+
+	private JLabel lblReciver() {
+		JLabel reciver = new JLabel();
+		reciver.setPreferredSize(new Dimension(70, WIN_HEIGHT/20));
+		reciver.setText("To: ");
+		return reciver;
 	}
 
 	private JLabel lblPrivateCreate() {
@@ -406,19 +416,7 @@ public class ClientGUI extends JPanel {
 		Group group;
 		boolean groupNameUsed = false;
 		String groupName;
-		//  mock start
-		Map<String, User> users = new Hashtable<>();
-		for (int i=0; i < onlineClients.size(); i++) {
-			users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
-		} // mock end
-		ArrayList<User> selectedUsers = NewGroupDialog.display(users);
-		String[] recipients = new String[selectedUsers.size() + 1];
-
-		for(int i = 0; i < selectedUsers.size(); i++){
-			recipients[i] = selectedUsers.get(i).getUserName();
-		}
-		recipients[selectedUsers.size()] = username;
-
+		String[] recipients = presentRecipients();
 		do{
 			groupName = JOptionPane.showInputDialog("Enter group name");
 			for(int i = 0; i < groupList.size(); i++){
@@ -428,7 +426,23 @@ public class ClientGUI extends JPanel {
 		group = new Group(recipients, groupName);
 		return group;
 	}
+	
+	private String[] presentRecipients() {
+	//  mock start
+			Map<String, User> users = new Hashtable<>();
+			for (int i=0; i < onlineClients.size(); i++) {
+				users.put(onlineClients.get(i), new UserMock(onlineClients.get(i)));
+			} // mock end
+			ArrayList<User> selectedUsers = NewGroupDialog.display(users);
+			String[] recipients = new String[selectedUsers.size() + 1];
 
+			for(int i = 0; i < selectedUsers.size(); i++){
+				recipients[i] = selectedUsers.get(i).getUserName();
+			}
+			recipients[selectedUsers.size()] = username;
+			
+			return recipients;
+	}
 
 	private void sendChatMessage() {
 		if (selectedGroup == null) {
