@@ -5,6 +5,7 @@ import gui.ConnectGUI;
 import message.*;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.*;
 
@@ -29,11 +30,16 @@ public class ClientController {
 
 	public void connect(String address, int port, String username) {
 		clientConnection = new ClientConnection(address, port);
+		if (clientConnection.hasConnected()) {
         clientConnection.setListener(new ClientConnectionListener());
         clientConnection.setUsername(username);
         clientConnection.start();
         connectFrame.dispose();
         createClientFrame(username);
+		} else {
+			JOptionPane.showMessageDialog(null, "Could not Connect");
+		}
+		
 	}
 
 	public void createClientFrame(String username) {
