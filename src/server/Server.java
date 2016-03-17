@@ -20,6 +20,7 @@ public class Server extends Thread {
 	private ThreadPoolExecutor threadPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 	private ServerSocket serverSocket;
 	private Socket socket;
+	boolean running = true;
 
 	public Server(Controller controller, int port) {
 		this.controller = controller;
@@ -27,7 +28,13 @@ public class Server extends Thread {
 	}
 
 	public void stopServer(){
-		this.interrupt();
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		running = false;
 	}
 	
 	public void run() {
@@ -37,14 +44,17 @@ public class Server extends Thread {
 			e.printStackTrace();
 		}
 		
-		while(!Thread.interrupted()) {
+		while(running) {
 			try {
 				socket = serverSocket.accept();
-				System.out.println("Client connected: " + socket.getInetAddress());
 				threadPool.execute(new User(controller, socket));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		try{
+			serverSocket.close();
+		}catch (IOException e){
 		}
 	}
 }

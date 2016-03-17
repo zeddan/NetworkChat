@@ -61,10 +61,10 @@ public class User implements Runnable {
 					controller.processChatMessage(object);
 				}
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (IOException e) {
 				cancel();
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -74,9 +74,8 @@ public class User implements Runnable {
 			outputStream.writeObject(object);
 			if(object instanceof ChatMessage){
 				ChatMessage cm = (ChatMessage) object;
-				controller.logToGUI(new SystemEntry("ChattMessage sent to: " +userName, SystemEntryType.INFO).toString() + "\n"
-						+ cm.getChatMessage() + "\n" +
-						cm.getFileName());
+				controller.logToGUI(new SystemEntry("Message to: " + userName + ", from: " + cm.getSender() + ", "+ cm.getChatMessage() + " filename: " + 
+				cm.getFileName(), SystemEntryType.INFO).toString() + "\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

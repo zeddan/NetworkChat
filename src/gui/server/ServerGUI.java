@@ -2,6 +2,7 @@ package gui.server;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultCaret;
 
 import gui.button.CustomButton;
 import server.Controller;
@@ -57,8 +58,9 @@ public class ServerGUI extends JPanel implements ActionListener{
 
     private JTextArea taLog() {
         JTextArea taLog = new JTextArea();
+        taLog.setEditable(false);
         Dimension size = new Dimension(WIN_WIDTH-PNL_LEFT_WIDTH, WIN_HEIGHT);
-        taLog.setPreferredSize(size);
+ //       taLog.setPreferredSize(size);
         taLog.setBorder(new EmptyBorder(10, 10, 10, 10));
         return taLog;
     }
@@ -68,7 +70,16 @@ public class ServerGUI extends JPanel implements ActionListener{
         pnlMain.setLayout(new BorderLayout());
         pnlMain.setPreferredSize(new Dimension(WIN_WIDTH-WIN_WIDTH/4, WIN_HEIGHT));
         taLog = taLog();
-        pnlMain.add(taLog);
+
+		JScrollPane scrollableUserList = new JScrollPane(taLog);
+		scrollableUserList.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollableUserList.setBorder(null);
+		
+        pnlMain.add(scrollableUserList);
+        
+        DefaultCaret caret = (DefaultCaret) taLog.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        
         return pnlMain;
     }
 

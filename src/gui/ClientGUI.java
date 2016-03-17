@@ -149,7 +149,7 @@ public class ClientGUI extends JPanel {
 		lblPrivateCreate.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
-				addPrivate();
+				//addPrivate();
 			}
 
 			@Override
@@ -403,20 +403,20 @@ public class ClientGUI extends JPanel {
 		}
 	}
 
-	private void addPrivate() {
-		boolean foundPMName = false;
-		String name;
-		for(Group group : privateMessageList) {
-			if(group.getGroupName().equals(name))
-				foundPMName = true;
-		}
-		if(!foundPMName){
-			JLabel label = lblNewGroup(name);
-			groupLabels.add(label);
-			pnlLeftPrivate.add(label);
-			pnlLeftPrivate.updateUI();
-		}
-	}
+//	private void addPrivate() {
+//		boolean foundPMName = false;
+//		String name;
+//		for(Group group : privateMessageList) {
+//			if(group.getGroupName().equals(name))
+//				foundPMName = true;
+//		}
+//		if(!foundPMName){
+//			JLabel label = lblNewGroup(name);
+//			groupLabels.add(label);
+//			pnlLeftPrivate.add(label);
+//			pnlLeftPrivate.updateUI();
+//		}
+//	}
 
 	private Group createGroup() {
 		Group group;

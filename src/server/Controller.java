@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -32,35 +33,14 @@ public class Controller {
 	private Server server;
 	private Enumeration enumeration;
 	
-	private Hashtable<String, User> onlineUserTable;
-	private Hashtable<String, ArrayList<ChatMessage>> messageQueue;
-	
-//	private final static Logger requestLog = Logger.getLogger("requests"); 
-//	private final static Logger errorLog = Logger.getLogger("errors");
-//	private FileHandler requestFile;
-//	private FileHandler errorFile;	
+	private OnlineUsers onlineUserTable;
+	private Messages messageQueue;
+
 	
 	public Controller(ServerGUI gui) {
-		onlineUserTable = new Hashtable<String, User>();
-		messageQueue = new Hashtable<String, ArrayList<ChatMessage>>();
+		onlineUserTable = new OnlineUsers(); //new Hashtable<String, User>();
+		messageQueue = new Messages(); //new Hashtable<String, ArrayList<ChatMessage>>();
 		this.gui = gui;
-//		try {
-//			requestFile = new FileHandler("files/requestLog.log");
-//			errorFile = new FileHandler("files/errorLog.log");
-//	    	requestFile.setFormatter(new SimpleFormatter()); // xml default
-//	    	requestLog.setUseParentHandlers(true); // not in console
-//	    	requestLog.addHandler(requestFile); // log to file
-//	    	errorLog.addHandler(errorFile); // log to file (and console)
-//
-//		} catch (SecurityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-
 	}
 
 	public User findOnlineUser(String userName) {
@@ -83,8 +63,6 @@ public class Controller {
 	
 	
 	public String[] getClientsOnline() {
-//		requestLog.info("In getClientsOnline");
-		gui.writeLogToGUI(new SystemEntry("Vi testar detta från getClientsOnline", SystemEntryType.INFO).toString() + "\n");
 		ArrayList<String> list = new ArrayList<String>();
 		enumeration = onlineUserTable.keys();
 		while(enumeration.hasMoreElements()) {
@@ -113,29 +91,43 @@ public class Controller {
 	}
 
 	public void checkMessageQueue(User user) {
-		ArrayList<ChatMessage> list = messageQueue.get(user.getUserName());
-		System.out.println("Checking message queue");
-		if(list != null) {
-			for(int i = 0; i < list.size(); i++) {
-				ChatMessage message = list.get(i);
-				System.out.println("Found queued message");
-				message.setDeliveredToServerTime(getTime());
-				user.send(message);
-				list.remove(i);
-			}
-			if(list.isEmpty()) {
-				System.out.println("Removing Arraylist " + user.getUserName());
-				messageQueue.remove(user);
-			}
+	LinkedList<ChatMessage> list = messageQueue.get(user.getUserName());
+	if(list != null) {
+		while(!list.isEmpty()){
+			ChatMessage message = list.remove();
+			message.setDeliveredToServerTime(getTime());
+			user.send(message);
+		}
+		for(int i = 0; i < list.size(); i++) {
+
+		}
+		if(list.isEmpty()) {
+			messageQueue.remove(user.getUserName());
 		}
 	}
+}
+
+	
+//	public void checkMessageQueue(User user) {
+//		ArrayList<ChatMessage> list = messageQueue.get(user.getUserName());
+//		System.out.println("list= " + list.size() + " user.getUserName");
+//		if(list != null) {
+//			for(int i = 0; i < list.size(); i++) {
+//				ChatMessage message = list.get(i);
+//				message.setDeliveredToServerTime(getTime());
+//				user.send(message);
+//				list.remove(i);
+//			}
+//			if(list.isEmpty()) {
+//				messageQueue.remove(user.getUserName());
+//			}
+//		}
+//	}
 
 	private void addToMessageQueue(String userName, ChatMessage message) {
-		ArrayList<ChatMessage> list = messageQueue.get(userName);
-		System.out.println("Adding to messagequeue");
+		LinkedList<ChatMessage> list = messageQueue.get(userName);
 		if(list == null) {
-			System.out.println("Adding new Arraylist");
-			ArrayList<ChatMessage> newList = new ArrayList<ChatMessage>();
+			LinkedList<ChatMessage> newList = new LinkedList<ChatMessage>();
 			newList.add(message);
 			messageQueue.put(userName, newList);
 		} else {
@@ -150,21 +142,21 @@ public class Controller {
 	}
 	
 	public void stopServer(){
-		if(server!=null){
-			server.interrupt();
+		server.stopServer();
+		String[] allOnlineClients = getClientsOnline();
+		for(int i = 0; i < allOnlineClients.length; i++){
+			findOnlineUser(allOnlineClients[i]).cancel();
 		}
 	}
 
 	public void removeUserFromList(String userName) {
 		onlineUserTable.remove(userName);
-		//System.out.println("Removed from userlist: " + userName);
 		logToGUI(new SystemEntry(userName + " disconnected", SystemEntryType.INFO).toString() + "\n");
 		sendUserListToAllClients();
 	}
 
 	public void addUserToList(User newUser) {
-		onlineUserTable.put(newUser.getUserName(), newUser);
-		System.out.println("Added new User: " + newUser.getUserName());
+		onlineUserTable.put(newUser);
 		sendUserListToAllClients();
 	}
 	
