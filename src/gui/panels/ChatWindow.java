@@ -37,8 +37,8 @@ public class ChatWindow extends JPanel {
 	
 	/**
 	 * 
-	 * @param message the chat message to append
-	 * @param image message image. doesn't matter if its null.
+	 * @param message The chat message to append.
+	 * @param image Message image to display. doesn't matter if its null.
 	 */
 	public void append(String message, Icon image) {
 	
