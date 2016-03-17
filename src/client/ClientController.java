@@ -37,7 +37,7 @@ public class ClientController {
         connectFrame.dispose();
         createClientFrame(username);
 		} else {
-			JOptionPane.showMessageDialog(null, "Could not Connect");
+			JOptionPane.showMessageDialog(connectFrame, "Could not Connect");
 		}
 		
 	}
