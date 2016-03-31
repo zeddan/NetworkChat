@@ -11,6 +11,10 @@ public class Group implements Serializable{
 		this.groupName = groupName;
 	}
 	
+	public void setRecipients(String[] recipients){
+		this.recipients = recipients;
+	}
+	
 	public String[] getRecipients(){
 		return recipients;
 	}

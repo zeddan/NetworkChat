@@ -294,6 +294,7 @@ public class ClientGUI extends JPanel {
         onlineClients = clientList;
 		userPanel.clearUserPanel();
         userPanel.updateOnlineClients(clientList, username);
+        groups.get(0).setRecipients(clientList);
 	}
 
 	public void setUsername(String username) {

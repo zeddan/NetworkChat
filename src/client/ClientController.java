@@ -45,8 +45,8 @@ public class ClientController {
 			clientConnection.setListener(new ClientConnectionListener());
 			clientConnection.setUsername(username);
 			clientConnection.start();
-			connectFrame.dispose();
 			createClientFrame(username);
+			connectFrame.dispose();
 		} else {
 			JOptionPane.showMessageDialog(connectFrame, "Could not Connect");
 		}
